@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "closure #1 in closure #1 in ContentView.TaskView.__preview__body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "runTask">
+            </PersistentString>
+            <PersistentString
+               value = "completeTask">
+            </PersistentString>
+            <PersistentString
+               value = "task.isCompleted">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #2 in closure #1 in ContentView.TaskView.__preview__body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "runTask">
+            </PersistentString>
+            <PersistentString
+               value = "completeTask">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ContentView.FullScreenModalView.init(task:):ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "timeRemaining">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in PomodoroTimerNew.getTimeRemaining():PomodoroTimer.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "request.trigger">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "PomodoroTimer.getTimeRemaining():PomodoroTimer.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "startTime">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #3 in CurrentTaskView.body.getter:CurrentTaskView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.currentTimer!.timeRemaining">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in TaskDetails.body.getter:TaskDetails.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "task.name">
+            </PersistentString>
+            <PersistentString
+               value = "task">
+            </PersistentString>
+            <PersistentString
+               value = "task.isCompleted">
+            </PersistentString>
+            <PersistentString
+               value = "isRun">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in closure #2 in closure #1 in ContentView.TaskView.__preview__body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "completeTask">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in ContentView.TaskDetails.__preview__body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "task.completedPomodoros">
+            </PersistentString>
+            <PersistentString
+               value = "isRun">
+            </PersistentString>
+            <PersistentString
+               value = "task.spoiledPomodoros">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in closure #1 in closure #1 in ContentView.TaskView.__preview__body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "timeRemaining">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in closure #1 in ContentView.TaskView.body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "currentTimer!.timeRemaining">
+            </PersistentString>
+            <PersistentString
+               value = "timeRemaining">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in ContentView.TaskView.__preview__body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "runTask">
+            </PersistentString>
+            <PersistentString
+               value = "completeTask">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in closure #1 in ContentView.TaskDetails.__preview__body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.task.name!">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in PomodoroTimer.getTimeRemaining():PomodoroTimer.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.timerType">
+            </PersistentString>
+            <PersistentString
+               value = "currentDate!">
+            </PersistentString>
+            <PersistentString
+               value = "requests.sorted(by: { $0.identifier &lt; $1.identifier } )">
+            </PersistentString>
+            <PersistentString
+               value = "Int(self.getTimeByType(timerType: self.timerType))">
+            </PersistentString>
+            <PersistentString
+               value = "request.identifier">
+            </PersistentString>
+            <PersistentString
+               value = "self.stopTimes">
+            </PersistentString>
+            <PersistentString
+               value = "&quot;1024pomodoro&quot; &gt; &quot;1000pomodoro&quot;">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in closure #1 in ContentView.__preview__body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "task.isCompleted">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in closure #1 in closure #1 in ContentView.TaskDetails.body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.task.name">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
