@@ -10,10 +10,13 @@ import UserNotifications
 
 class PomodoroTimer {
     public var timerType: String = TimerType.pomodoro
-    public var timeRemaining: Int? = Constants.pomodoroTime
+    public var timeRemaining: Int? = nil
     private var isRun: Bool = true
+    private let settings: PomodoroSettings
     
-    init() {
+    init(settings: PomodoroSettings) {
+        self.settings = settings
+        self.timeRemaining = settings.pomodoroTime * 60
         self.setAllNotifications()
     }
     
@@ -37,15 +40,15 @@ class PomodoroTimer {
     
     private func setAllNotifications() {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        let maxNumber: Int = Constants.maxPomodorosNumber / 2 / (Constants.shortBreakTimeNumber + 1)
+        let maxNumber: Int = PomodoroSettings.maxPomodorosNumber  // = 64(max reminders) / 2/ 4
 
         var currentDate = Date()
         
         var curIndex = 0
         for _ in 1...maxNumber{
-            for i in 1...Constants.shortBreakTimeNumber + 1 {
+            for i in 1...settings.shortBreakTimeNumber + 1 {
                 currentDate = createNotification(index: 1000 + curIndex, timerType: TimerType.pomodoro, currentDate: currentDate)
-                currentDate = createNotification(index: 1000 + curIndex + 1, timerType: i == Constants.shortBreakTimeNumber + 1 ? TimerType.longBreak : TimerType.shortBreak, currentDate: currentDate)
+                currentDate = createNotification(index: 1000 + curIndex + 1, timerType: i == settings.shortBreakTimeNumber + 1 ? TimerType.longBreak : TimerType.shortBreak, currentDate: currentDate)
                 curIndex += 2
             }
         }
@@ -77,11 +80,11 @@ class PomodoroTimer {
         if isBreak {
             return 0.1
         } else if timerType == TimerType.pomodoro {
-            return TimeInterval(Constants.pomodoroTime)
+            return TimeInterval(settings.pomodoroTime * 60)
         } else if timerType == TimerType.shortBreak {
-            return TimeInterval(Constants.shortBreakTime)
+            return TimeInterval(settings.shortBreakTime * 60)
         } else if timerType == TimerType.longBreak {
-            return TimeInterval(Constants.longBreakTime)
+            return TimeInterval(settings.longBreakTime * 60)
         }
         return 0
     }

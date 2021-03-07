@@ -10,10 +10,18 @@ import SwiftUI
 
 struct CurrentTaskView: View {
     @Environment(\.presentationMode) var presentationMode
-    @State private var timeRemaining: Int? = Constants.pomodoroTime
-    @State var currentTimer: PomodoroTimer? = PomodoroTimer()
-    var task: Task
+    @State private var timeRemaining: Int? = nil
+    private var currentTimer: PomodoroTimer? = nil
+    private var task: Task
+    private let settings: PomodoroSettings
+
     var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
+    init(task: Task, settings: PomodoroSettings) {
+        self.task = task
+        self.settings = settings
+        self.currentTimer = PomodoroTimer(settings: settings)
+    }
 
     var body: some View {
         Spacer()
@@ -28,6 +36,9 @@ struct CurrentTaskView: View {
             Text("time remaining: \(secondsToHoursMinutesSeconds(seconds:  self.timeRemaining ?? 0))")
                 .frame(minWidth: 10, idealWidth: 100, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, idealHeight: 10, maxHeight: .infinity, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 .foregroundColor(.white).padding(.horizontal, 20).padding(.vertical, 5)
+                .onAppear(){
+                    self.timeRemaining = settings.pomodoroTime * 60
+                }
         }
             .frame(minWidth: 10, idealWidth: 100, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, idealHeight: 10, maxHeight: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .padding()

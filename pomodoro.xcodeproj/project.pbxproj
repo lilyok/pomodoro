@@ -19,6 +19,7 @@
 		26D213A325EFF2CA00257AED /* CurrentTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D213A225EFF2CA00257AED /* CurrentTaskView.swift */; };
 		26D213A825EFF31300257AED /* TaskDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D213A725EFF31300257AED /* TaskDetails.swift */; };
 		26D213B025F0062800257AED /* Preview Content in Resources */ = {isa = PBXBuildFile; fileRef = 26D213AF25F0062800257AED /* Preview Content */; };
+		26D213B525F52C7800257AED /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D213B425F52C7800257AED /* SettingsView.swift */; };
 		26E6282E25E59CF700AB3BF8 /* Task+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E6282C25E59CF700AB3BF8 /* Task+CoreDataClass.swift */; };
 		26E6282F25E59CF700AB3BF8 /* Task+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E6282D25E59CF700AB3BF8 /* Task+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
@@ -59,6 +60,7 @@
 		26D213A225EFF2CA00257AED /* CurrentTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentTaskView.swift; sourceTree = "<group>"; };
 		26D213A725EFF31300257AED /* TaskDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetails.swift; sourceTree = "<group>"; };
 		26D213AF25F0062800257AED /* Preview Content */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Preview Content"; sourceTree = "<group>"; };
+		26D213B425F52C7800257AED /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		26E6282C25E59CF700AB3BF8 /* Task+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataClass.swift"; sourceTree = "<group>"; };
 		26E6282D25E59CF700AB3BF8 /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -124,6 +126,7 @@
 				26D2139D25EFDF1A00257AED /* Untilities.swift */,
 				26D213A225EFF2CA00257AED /* CurrentTaskView.swift */,
 				26D213A725EFF31300257AED /* TaskDetails.swift */,
+				26D213B425F52C7800257AED /* SettingsView.swift */,
 			);
 			path = pomodoro;
 			sourceTree = "<group>";
@@ -285,6 +288,7 @@
 				26D2139E25EFDF1A00257AED /* Untilities.swift in Sources */,
 				26E6282F25E59CF700AB3BF8 /* Task+CoreDataProperties.swift in Sources */,
 				26AF75EB25E0501D00BA2776 /* pomodoroApp.swift in Sources */,
+				26D213B525F52C7800257AED /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

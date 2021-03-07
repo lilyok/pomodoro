@@ -19,7 +19,14 @@ struct ContentView: View {
         ],
         animation: .default)
     private var tasks: FetchedResults<Task>
+    private var settings: PomodoroSettings
+
+    @State private var openSettings = false
     
+    init() {
+        self.settings = PomodoroSettings.loadPomodoroSettings()
+    }
+
     func saveData() {
         do {
           try viewContext.save()
@@ -35,19 +42,25 @@ struct ContentView: View {
         NavigationView {
                 List {
                     ForEach(tasks) { task in
-                        TaskView(task: task)
+                        TaskView(task: task, settings: settings)
                 }
                 .onDelete(perform: deleteTasks)
                     .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
                             saveData()
-
                         }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                  #if os(iOS)
-                  EditButton()
-                  #endif
+                  Button(action: {
+                            openSettings.toggle()
+                    
+                  }) {
+                      Label("Settings", systemImage: "gearshape")
+                  }.fullScreenCover(isPresented: $openSettings) {
+                    SettingsView(settings: settings).onDisappear(){
+                        self.settings.savePomodoroSettings()
+                    }
+                  }
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -61,6 +74,7 @@ struct ContentView: View {
     
     struct TaskView: View {
         var task: Task
+        let settings: PomodoroSettings
         
         @State private var completeTask = false
         @State private var runTask = false
@@ -106,7 +120,7 @@ struct ContentView: View {
                     }
                 }
             }.fullScreenCover(isPresented: $runTask) {
-                CurrentTaskView(task: task)
+                CurrentTaskView(task: task, settings: settings)
             }.background((!completeTask && !task.isCompleted) ?
                             LinearGradient(gradient: Gradient(colors: [Color.white, Color.white]), startPoint: .leading, endPoint: .trailing):
                             LinearGradient(gradient: Gradient(colors: [Color.blue, Color.red]), startPoint: .leading, endPoint: .trailing))
