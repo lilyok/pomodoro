@@ -47,7 +47,7 @@ struct ContentView: View {
                 .onDelete(perform: deleteTasks)
                     .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
                             saveData()
-                        }
+                    }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -122,7 +122,7 @@ struct ContentView: View {
             }.fullScreenCover(isPresented: $runTask) {
                 CurrentTaskView(task: task, settings: settings)
             }.background((!completeTask && !task.isCompleted) ?
-                            LinearGradient(gradient: Gradient(colors: [Color.white, Color.white]), startPoint: .leading, endPoint: .trailing):
+                            LinearGradient(gradient: Gradient(colors: [Color.clear, Color.clear]), startPoint: .leading, endPoint: .trailing):
                             LinearGradient(gradient: Gradient(colors: [Color.blue, Color.red]), startPoint: .leading, endPoint: .trailing))
             .opacity((!completeTask && !task.isCompleted) ? 1.0: 0.8).cornerRadius(5)
         }

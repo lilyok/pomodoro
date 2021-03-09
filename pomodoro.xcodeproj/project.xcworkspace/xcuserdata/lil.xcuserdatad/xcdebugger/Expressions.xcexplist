@@ -3,13 +3,13 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "closure #1 in ContentView.TaskView.__preview__body.getter:ContentView.swift">
+         contextName = "closure #1 in closure #1 in SettingsView.__preview__body.getter:ContentView.swift">
          <PersistentStrings>
             <PersistentString
-               value = "runTask">
+               value = "self.pomodoroIndex">
             </PersistentString>
             <PersistentString
-               value = "completeTask">
+               value = "settings.pomodoroTime">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -31,10 +31,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in closure #1 in closure #1 in ContentView.__preview__body.getter:ContentView.swift">
+         contextName = "closure #1 in closure #1 in closure #2 in closure #1 in ContentView.__preview__body.getter:ContentView.swift">
          <PersistentStrings>
             <PersistentString
-               value = "task.isCompleted">
+               value = "settings">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -50,10 +50,13 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in closure #1 in closure #2 in closure #1 in ContentView.__preview__body.getter:ContentView.swift">
+         contextName = "closure #1 in ContentView.TaskView.__preview__body.getter:ContentView.swift">
          <PersistentStrings>
             <PersistentString
-               value = "settings">
+               value = "runTask">
+            </PersistentString>
+            <PersistentString
+               value = "completeTask">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -66,17 +69,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in closure #1 in SettingsView.__preview__body.getter:ContentView.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "settings.pomodoroTime">
-            </PersistentString>
-            <PersistentString
-               value = "self.pomodoroIndex">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "closure #1 in closure #1 in closure #2 in closure #1 in ContentView.body.getter:ContentView.swift">
          <PersistentStrings>
             <PersistentString
@@ -85,10 +77,21 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "closure #1 in closure #1 in closure #1 in ContentView.__preview__body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "task.isCompleted">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #3 in CurrentTaskView.body.getter:CurrentTaskView.swift">
          <PersistentStrings>
             <PersistentString
                value = "self.currentTimer!.timeRemaining">
+            </PersistentString>
+            <PersistentString
+               value = "self.timeBeforeBackground!">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -164,32 +167,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in PomodoroTimer.getTimeRemaining():PomodoroTimer.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.timerType">
-            </PersistentString>
-            <PersistentString
-               value = "currentDate!">
-            </PersistentString>
-            <PersistentString
-               value = "requests.sorted(by: { $0.identifier &lt; $1.identifier } )">
-            </PersistentString>
-            <PersistentString
-               value = "Int(self.getTimeByType(timerType: self.timerType))">
-            </PersistentString>
-            <PersistentString
-               value = "request.identifier">
-            </PersistentString>
-            <PersistentString
-               value = "self.stopTimes">
-            </PersistentString>
-            <PersistentString
-               value = "&quot;1024pomodoro&quot; &gt; &quot;1000pomodoro&quot;">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "SettingsView.init():ContentView.swift">
          <PersistentStrings>
             <PersistentString
@@ -197,6 +174,32 @@
             </PersistentString>
             <PersistentString
                value = "self.pomodoroTime">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in PomodoroTimer.getTimeRemaining():PomodoroTimer.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.stopTimes">
+            </PersistentString>
+            <PersistentString
+               value = "currentDate!">
+            </PersistentString>
+            <PersistentString
+               value = "&quot;1024pomodoro&quot; &gt; &quot;1000pomodoro&quot;">
+            </PersistentString>
+            <PersistentString
+               value = "Int(self.getTimeByType(timerType: self.timerType))">
+            </PersistentString>
+            <PersistentString
+               value = "requests.sorted(by: { $0.identifier &lt; $1.identifier } )">
+            </PersistentString>
+            <PersistentString
+               value = "request.identifier">
+            </PersistentString>
+            <PersistentString
+               value = "self.timerType">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -237,10 +240,10 @@
                value = "minPomodoroTime">
             </PersistentString>
             <PersistentString
-               value = "self.pomodoroIndex">
+               value = "settings.pomodoroTime">
             </PersistentString>
             <PersistentString
-               value = "settings.pomodoroTime">
+               value = "self.pomodoroIndex">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
