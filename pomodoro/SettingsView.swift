@@ -8,7 +8,7 @@
 import SwiftUI
 
 class PomodoroSettings: Codable {
-    static let maxPomodorosNumber = 8
+    static let maxNotificatiosNumber = 64
 
     static let minPomodoroTime = 10
     static let maxPomodoroTime = 120

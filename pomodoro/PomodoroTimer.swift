@@ -17,7 +17,7 @@ class PomodoroTimer {
     init(settings: PomodoroSettings) {
         self.settings = settings
         self.timeRemaining = settings.pomodoroTime * 60
-        self.setAllNotifications()
+        self.setAllNotifications(maxNumber: PomodoroSettings.maxNotificatiosNumber / (settings.shortBreakTimeNumber + 1) / 2)
     }
     
     private func createNotification(index: Int, timerType: String, currentDate: Date, isBreak: Bool = false) -> Date {
@@ -38,10 +38,10 @@ class PomodoroTimer {
         return currentDate
     }
     
-    private func setAllNotifications() {
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        let maxNumber: Int = PomodoroSettings.maxPomodorosNumber  // = 64(max reminders) / 2/ 4
-
+    private func setAllNotifications(maxNumber: Int, isAdditionalRequests: Bool = false) {
+        if !isAdditionalRequests {
+            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        }
         var currentDate = Date()
         
         var curIndex = 0
@@ -93,8 +93,9 @@ class PomodoroTimer {
         let currentDate = Date()
         let center = UNUserNotificationCenter.current()
         center.getPendingNotificationRequests(completionHandler: { requests in
-            if self.isRun && requests.count == 0 {
-                self.setAllNotifications()
+            let freeSessionsCount = (PomodoroSettings.maxNotificatiosNumber - requests.count) / (self.settings.shortBreakTimeNumber + 1) / 2
+            if self.isRun && freeSessionsCount > 0 {
+                self.setAllNotifications(maxNumber: freeSessionsCount, isAdditionalRequests: true)
             }
             for request in requests.sorted(by: { $0.identifier < $1.identifier } ) {
                 self.timerType = self.getTimerType(requestId: request.identifier)
