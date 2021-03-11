@@ -22,7 +22,7 @@ struct TaskDetails: View {
             ZStack(alignment: .leading) {
                 if name.isEmpty {
                     if self.task.name == nil || self.task.name == "_New task_" {
-                        Text("Enter task name").foregroundColor(task.isCompleted ? Color.white : .secondary)
+                        Text("Type here task name").foregroundColor(task.isCompleted ? Color.white : .secondary)
                     } else {
                         Text("\(self.task.name!)").foregroundColor(isRun ? .secondary : (task.isCompleted ? Color.white : .primary))
                     }

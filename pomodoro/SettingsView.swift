@@ -82,17 +82,17 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
-                Picker("pomodoro session:", selection: $pomodoroIndex) {
+                Picker("Pomodoro session:", selection: $pomodoroIndex) {
                     ForEach(PomodoroSettings.minPomodoroTime ..< PomodoroSettings.maxPomodoroTime + 1) {
                         Text("\(secondsToHoursMinutesSeconds(seconds: $0 * 60))")
                     }
                 }
-                Picker("short break:", selection: $shortBreakIndex) {
+                Picker("Short break:", selection: $shortBreakIndex) {
                     ForEach(PomodoroSettings.minShortBreakTime ..< PomodoroSettings.maxShortBreakTime + 1) {
                         Text("\(secondsToHoursMinutesSeconds(seconds: $0 * 60))")
                     }
                 }
-                Picker("long break:", selection: $longBreakIndex) {
+                Picker("Long break:", selection: $longBreakIndex) {
                     ForEach(PomodoroSettings.minLongBreakTime ..< PomodoroSettings.maxLongBreakTime + 1) {
                         Text("\(secondsToHoursMinutesSeconds(seconds: $0 * 60))")
                     }
