@@ -45,9 +45,9 @@ struct ContentView: View {
                         TaskView(task: task, settings: settings)
                 }
                 .onDelete(perform: deleteTasks)
-                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                            saveData()
-                    }
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+                    saveData()
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -78,6 +78,9 @@ struct ContentView: View {
         
         @State private var completeTask = false
         @State private var runTask = false
+        @State private var isNewTimer = false;
+
+        let timer = Timer.publish(every: 0, on: .main, in: .common).autoconnect()
 
         var body: some View {
             VStack(alignment: .leading) {
@@ -85,6 +88,7 @@ struct ContentView: View {
                 HStack {
                     if !completeTask && !task.isCompleted {
                         Button(action: {
+                            isNewTimer = true
                             runTask.toggle()
                         }) {
                             Text("Run")
@@ -120,11 +124,17 @@ struct ContentView: View {
                     }
                 }
             }.fullScreenCover(isPresented: $runTask) {
-                CurrentTaskView(task: task, settings: settings)
+                CurrentTaskView(task: task, settings: settings, isNewTimer: isNewTimer)
             }.background((!completeTask && !task.isCompleted) ?
                             LinearGradient(gradient: Gradient(colors: [Color.clear, Color.clear]), startPoint: .leading, endPoint: .trailing):
                             LinearGradient(gradient: Gradient(colors: [Color.blue, Color.red]), startPoint: .leading, endPoint: .trailing))
             .opacity((!completeTask && !task.isCompleted) ? 1.0: 0.8).cornerRadius(5)
+            .onReceive(timer) { _ in
+                let TasksStatus = UserDefaults.standard.object(forKey: "TaskSettings") as? [String:Bool] ?? [:]
+                let key = "\(task.name ?? "")_\(task.timestamp ?? Date())"
+                self.runTask = TasksStatus[key] != nil ? TasksStatus[key]! : false
+                timer.upstream.connect().cancel()
+            }
         }
     }
 

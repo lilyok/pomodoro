@@ -12,6 +12,9 @@ struct TimerType {
 }
 
 func secondsToHoursMinutesSeconds (seconds : Int) -> String {
+    if seconds < 0{
+        return "..."
+    }
     let h = seconds / 3600
     let m = (seconds % 3600) / 60
     let s = (seconds % 3600) % 60

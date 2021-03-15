@@ -13,11 +13,18 @@ class PomodoroTimer {
     public var timeRemaining: Int? = nil
     private var isRun: Bool = true
     private let settings: PomodoroSettings
+    private var taskId: String
     
-    init(settings: PomodoroSettings) {
+    init(taskId: String, settings: PomodoroSettings, isNewTimer: Bool) {
+        self.taskId = taskId
         self.settings = settings
-        self.timeRemaining = settings.pomodoroTime * 60
-        self.setAllNotifications(maxNumber: PomodoroSettings.maxNotificatiosNumber / (settings.shortBreakTimeNumber + 1) / 2)
+        self.timeRemaining = -1
+        if isNewTimer {
+            self.setAllNotifications(maxNumber: PomodoroSettings.maxNotificatiosNumber / (settings.shortBreakTimeNumber + 1) / 2)
+        } else {
+            self.timeRemaining = getTimeRemaining()
+        }
+        saveTaskSettings()
     }
     
     private func createNotification(index: Int, timerType: String, currentDate: Date, isBreak: Bool = false) -> Date {
@@ -121,7 +128,15 @@ class PomodoroTimer {
     
     public func stopTimer() {
         self.isRun = false
+        saveTaskSettings()
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         _ = createNotification(index: 0, timerType: "", currentDate: Date(), isBreak: true)
+    }
+    
+    private func saveTaskSettings() {
+        let userDefaults = UserDefaults.standard
+        var settings = userDefaults.object(forKey: "TaskSettings") as? [String:Bool] ?? [:]
+        settings[taskId] = isRun
+        userDefaults.set(settings, forKey: "TaskSettings")
     }
 }
