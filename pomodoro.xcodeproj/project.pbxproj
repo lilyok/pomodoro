@@ -14,6 +14,7 @@
 		26AF75F725E0501E00BA2776 /* pomodoro.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 26AF75F525E0501E00BA2776 /* pomodoro.xcdatamodeld */; };
 		26AF760225E0501E00BA2776 /* pomodoroTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AF760125E0501E00BA2776 /* pomodoroTests.swift */; };
 		26AF760D25E0501E00BA2776 /* pomodoroUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AF760C25E0501E00BA2776 /* pomodoroUITests.swift */; };
+		26B006B426010ECD00A99086 /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B006B326010ECD00A99086 /* TaskView.swift */; };
 		26D2139925EFDE1F00257AED /* PomodoroTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D2139825EFDE1F00257AED /* PomodoroTimer.swift */; };
 		26D2139E25EFDF1A00257AED /* Untilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D2139D25EFDF1A00257AED /* Untilities.swift */; };
 		26D213A325EFF2CA00257AED /* CurrentTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D213A225EFF2CA00257AED /* CurrentTaskView.swift */; };
@@ -55,6 +56,7 @@
 		26AF760825E0501E00BA2776 /* pomodoroUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = pomodoroUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		26AF760C25E0501E00BA2776 /* pomodoroUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pomodoroUITests.swift; sourceTree = "<group>"; };
 		26AF760E25E0501E00BA2776 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		26B006B326010ECD00A99086 /* TaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskView.swift; sourceTree = "<group>"; };
 		26D2139825EFDE1F00257AED /* PomodoroTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimer.swift; sourceTree = "<group>"; };
 		26D2139D25EFDF1A00257AED /* Untilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untilities.swift; sourceTree = "<group>"; };
 		26D213A225EFF2CA00257AED /* CurrentTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentTaskView.swift; sourceTree = "<group>"; };
@@ -115,6 +117,9 @@
 		26AF75E925E0501D00BA2776 /* pomodoro */ = {
 			isa = PBXGroup;
 			children = (
+				26B006BC26010F7400A99086 /* common */,
+				26B006BB26010F3500A99086 /* task */,
+				26B006B226010DF400A99086 /* pomodoroTimer */,
 				26D213AF25F0062800257AED /* Preview Content */,
 				26AF75EA25E0501D00BA2776 /* pomodoroApp.swift */,
 				26AF75EC25E0501D00BA2776 /* ContentView.swift */,
@@ -122,10 +127,6 @@
 				26AF75F325E0501E00BA2776 /* Persistence.swift */,
 				26AF75F825E0501E00BA2776 /* Info.plist */,
 				26AF75F525E0501E00BA2776 /* pomodoro.xcdatamodeld */,
-				26D2139825EFDE1F00257AED /* PomodoroTimer.swift */,
-				26D2139D25EFDF1A00257AED /* Untilities.swift */,
-				26D213A225EFF2CA00257AED /* CurrentTaskView.swift */,
-				26D213A725EFF31300257AED /* TaskDetails.swift */,
 				26D213B425F52C7800257AED /* SettingsView.swift */,
 			);
 			path = pomodoro;
@@ -147,6 +148,32 @@
 				26AF760E25E0501E00BA2776 /* Info.plist */,
 			);
 			path = pomodoroUITests;
+			sourceTree = "<group>";
+		};
+		26B006B226010DF400A99086 /* pomodoroTimer */ = {
+			isa = PBXGroup;
+			children = (
+				26D2139825EFDE1F00257AED /* PomodoroTimer.swift */,
+			);
+			path = pomodoroTimer;
+			sourceTree = "<group>";
+		};
+		26B006BB26010F3500A99086 /* task */ = {
+			isa = PBXGroup;
+			children = (
+				26D213A225EFF2CA00257AED /* CurrentTaskView.swift */,
+				26D213A725EFF31300257AED /* TaskDetails.swift */,
+				26B006B326010ECD00A99086 /* TaskView.swift */,
+			);
+			path = task;
+			sourceTree = "<group>";
+		};
+		26B006BC26010F7400A99086 /* common */ = {
+			isa = PBXGroup;
+			children = (
+				26D2139D25EFDF1A00257AED /* Untilities.swift */,
+			);
+			path = common;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -281,6 +308,7 @@
 				26D213A325EFF2CA00257AED /* CurrentTaskView.swift in Sources */,
 				26AF75F725E0501E00BA2776 /* pomodoro.xcdatamodeld in Sources */,
 				26E6282E25E59CF700AB3BF8 /* Task+CoreDataClass.swift in Sources */,
+				26B006B426010ECD00A99086 /* TaskView.swift in Sources */,
 				26D213A825EFF31300257AED /* TaskDetails.swift in Sources */,
 				26D2139925EFDE1F00257AED /* PomodoroTimer.swift in Sources */,
 				26AF75F425E0501E00BA2776 /* Persistence.swift in Sources */,
