@@ -65,10 +65,15 @@ struct TaskView: View {
                         LinearGradient(gradient: Gradient(colors: [Color.blue, Color.red]), startPoint: .leading, endPoint: .trailing))
         .opacity((!completeTask && !task.isCompleted) ? 1.0: 0.8).cornerRadius(5)
         .onReceive(timer) { _ in
-            let TasksStatus = UserDefaults.standard.object(forKey: "TaskSettings") as? [String:Bool] ?? [:]
-            let key = "\(task.name ?? "")_\(task.timestamp ?? Date())"
-            self.runTask = TasksStatus[key] != nil ? TasksStatus[key]! : false
+            if !isNewTimer {
+                let TasksStatus = UserDefaults.standard.object(forKey: "TaskSettings") as? [String:Bool] ?? [:]
+                let key = "\(task.name ?? "")_\(task.timestamp ?? Date())"
+                self.runTask = TasksStatus[key] != nil ? TasksStatus[key]! : false
+            }
             timer.upstream.connect().cancel()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            isNewTimer = false
         }
     }
 }
