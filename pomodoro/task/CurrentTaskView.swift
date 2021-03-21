@@ -11,7 +11,6 @@ import SwiftUI
 struct CurrentTaskView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var timeRemaining: Int? = nil
-    @State private var timeBeforeBackground: Date? = nil
 
     private var currentTimer: PomodoroTimer? = nil
     private var task: Task
@@ -22,7 +21,8 @@ struct CurrentTaskView: View {
     init(task: Task, settings: PomodoroSettings, isNewTimer: Bool) {
         self.task = task
         self.settings = settings
-        self.currentTimer = PomodoroTimer(taskId: "\(task.name ?? "")_\(task.timestamp ?? Date())", settings: settings, isNewTimer: isNewTimer)
+        self.currentTimer = PomodoroTimer(taskId: self.createStrTaskId(), settings: settings, isNewTimer: isNewTimer)
+        saveTaskTimeSettings()
     }
 
     var body: some View {
@@ -33,6 +33,7 @@ struct CurrentTaskView: View {
                 if currentTimer?.timerType == TimerType.pomodoro {
                     self.task.spoiledPomodoros += 1
                 }
+            saveTaskTimeSettings(isStart: false)
                 presentationMode.wrappedValue.dismiss()
         }) {
             Text("time remaining: \(secondsToHoursMinutesSeconds(seconds:  self.timeRemaining ?? 0))")
@@ -40,6 +41,7 @@ struct CurrentTaskView: View {
                 .foregroundColor(.white).padding(.horizontal, 20).padding(.vertical, 5)
                 .onAppear(){
                     self.timeRemaining = self.currentTimer!.getTimeRemaining()
+                    calculateMeasures()
                 }
         }
             .frame(minWidth: 10, idealWidth: 100, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, idealHeight: 10, maxHeight: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
@@ -48,38 +50,62 @@ struct CurrentTaskView: View {
             .cornerRadius(40)
             .onReceive(timer) { time in
                 timeRemaining = self.currentTimer!.getTimeRemaining()
-                if self.timeBeforeBackground == nil && timeRemaining == 0 && currentTimer?.timerType == TimerType.pomodoro {
-                    self.task.completedPomodoros += 1
-                }
-            }
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                if currentTimer?.timerType == TimerType.pomodoro {
-                    self.timeBeforeBackground = Date().addingTimeInterval(-60*Double(settings.pomodoroTime) + Double(timeRemaining!))
-                } else {
-                    self.timeBeforeBackground = Date().addingTimeInterval(Double(timeRemaining!))
-                }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                if self.timeBeforeBackground != nil {
-                    let currentDate = Date()
-                    let diffs = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: self.timeBeforeBackground!, to: currentDate )
-
-                    let summary = diffs.second! + diffs.minute! * 60 + diffs.hour! * 3600 + diffs.day! * 3600 * 24
-
-                    let session_duration = 60*(settings.pomodoroTime + (settings.pomodoroTime + settings.shortBreakTime) * settings.shortBreakTimeNumber)
-                    let full_session_duration = 60*settings.longBreakTime + session_duration
-                    
-                    let full_session_pomodoros = Int64(Int(summary / full_session_duration) * (1 + settings.shortBreakTimeNumber))
-                    self.task.completedPomodoros += full_session_pomodoros
-
-                    let delta_durations = min(summary % full_session_duration, session_duration)
-                    if delta_durations > settings.pomodoroTime {
-                        self.task.completedPomodoros += Int64((delta_durations + settings.shortBreakTime * 60) / 60 / (settings.shortBreakTime + settings.pomodoroTime))
-                    }
-
-                    self.timeBeforeBackground = nil
-                }
+                calculateMeasures()
             }
             Spacer()
+    }
+    
+    private func calculateMeasures() {
+        let initTime = UserDefaults.standard.object(forKey: "InitTaskTime") as? Date ?? nil
+        if initTime != nil {
+            var initCompletedPomodoros = UserDefaults.standard.object(forKey: "InitCompletedPomodoros") as! Int64
+
+            let currentDate = Date()
+            let diffs = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: initTime!, to: currentDate )
+
+            let summary = diffs.second! + diffs.minute! * 60 + diffs.hour! * 3600 + diffs.day! * 3600 * 24
+
+            let session_duration = 60*(settings.pomodoroTime + (settings.pomodoroTime + settings.shortBreakTime) * settings.shortBreakTimeNumber)
+            let full_session_duration = 60*settings.longBreakTime + session_duration
+            
+            let full_session_pomodoros = Int64(Int(summary / full_session_duration) * (1 + settings.shortBreakTimeNumber))
+            initCompletedPomodoros += full_session_pomodoros
+            print(initTime!, currentDate, initCompletedPomodoros, full_session_pomodoros, self.task.completedPomodoros)
+
+            let delta_durations = min(summary % full_session_duration, session_duration)
+            print(delta_durations, (delta_durations + settings.shortBreakTime * 60) / 60 , settings.shortBreakTime + settings.pomodoroTime)
+
+            if delta_durations > settings.pomodoroTime {
+                initCompletedPomodoros += Int64((delta_durations + settings.shortBreakTime * 60) / 60 / (settings.shortBreakTime + settings.pomodoroTime))
+            }
+            self.task.completedPomodoros = initCompletedPomodoros
+        }
+    }
+
+    private func saveTaskTimeSettings(isStart: Bool = true) {
+        if !isStart {
+            UserDefaults.standard.removeObject(forKey: "InitTaskTime")
+            UserDefaults.standard.removeObject(forKey: "InitCompletedPomodoros")
+            return
+        }
+        if UserDefaults.standard.object(forKey: "InitTaskTime") as? Date ?? nil == nil {
+            UserDefaults.standard.set(Date(), forKey: "InitTaskTime")
+            UserDefaults.standard.set(task.completedPomodoros, forKey: "InitCompletedPomodoros")
+        }
+    }
+
+
+//    private func saveStatisticsSettings() {
+//        let weekday = Calendar.current.component(.weekday, from: Date())
+//        let userDefaults = UserDefaults.standard
+//        var settings = userDefaults.object(forKey: "WeekDailyStatisticsSettings") as? [String:Int64] ?? [:]
+//        settings[String(weekday)] = self.task.completedPomodoros
+//        userDefaults.set(settings, forKey: "WeekDailyStatisticsSettings")
+//    }
+    
+    private func createStrTaskId() -> String {
+        return "\(task.name ?? "")_\(task.timestamp ?? Date())"
     }
 }

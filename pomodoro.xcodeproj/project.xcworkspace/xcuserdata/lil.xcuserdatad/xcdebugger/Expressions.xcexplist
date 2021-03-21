@@ -22,6 +22,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "CurrentTaskView.saveTimeBeforeBackgroundSettings():CurrentTaskView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.timeBeforeBackground">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #3 in CurrentTaskView.body.getter:CurrentTaskView.swift">
          <PersistentStrings>
             <PersistentString
@@ -93,6 +101,9 @@
                value = "self.timeRemaining">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in TaskView.body.getter:TaskView.swift">
       </ContextState>
       <ContextState
          contextName = "closure #1 in PomodoroTimerNew.getTimeRemaining():PomodoroTimer.swift">
@@ -342,6 +353,14 @@
          <PersistentStrings>
             <PersistentString
                value = "runTask">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #5 in CurrentTaskView.body.getter:CurrentTaskView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.timeBeforeBackground">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
