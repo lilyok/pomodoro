@@ -16,20 +16,20 @@ class PomodoroSettings: Codable {
     static let maxShortBreakTime = 60
     static let minLongBreakTime = 5
     static let maxLongBreakTime = 120
-    static let minShortBreakNumber = 1
-    static let maxShortBreakNumber = 10
+    static let minSessionsNumberBeforeLongBreak = 1
+    static let maxSessionsNumberBeforeLongBreak = 10
 
     var pomodoroTime = 25
     var shortBreakTime = 5
     var longBreakTime = 15
 
-    var shortBreakTimeNumber = 3
+    var sessionsNumberBeforeLongBreak = 3
     
-    public func setSettings(pomodoroIndex: Int, shortBreakIndex: Int, longBreakIndex: Int, shortBreakTimeNumberIndex: Int) {
+    public func setSettings(pomodoroIndex: Int, shortBreakIndex: Int, longBreakIndex: Int, sessionsNumberBeforeLongBreakIndex: Int) {
         self.pomodoroTime = PomodoroSettings.minPomodoroTime + pomodoroIndex
         self.shortBreakTime = PomodoroSettings.minShortBreakTime + shortBreakIndex
         self.longBreakTime = PomodoroSettings.minLongBreakTime + longBreakIndex
-        self.shortBreakTimeNumber = PomodoroSettings.minShortBreakNumber + shortBreakTimeNumberIndex
+        self.sessionsNumberBeforeLongBreak = PomodoroSettings.minSessionsNumberBeforeLongBreak + sessionsNumberBeforeLongBreakIndex
     }
     
     public func getPomodoroIndex() -> Int {
@@ -44,8 +44,8 @@ class PomodoroSettings: Codable {
         return self.longBreakTime - PomodoroSettings.minLongBreakTime
     }
 
-    public func getShortBreakTimeNumberIndex() -> Int {
-        return self.shortBreakTimeNumber - PomodoroSettings.minShortBreakNumber
+    public func getSessionsNumberBeforeLongBreakIndex() -> Int {
+        return self.sessionsNumberBeforeLongBreak - PomodoroSettings.minSessionsNumberBeforeLongBreak
     }
     
     static public func loadPomodoroSettings() -> PomodoroSettings {
@@ -71,7 +71,7 @@ struct SettingsView: View {
     @State private var pomodoroIndex = 15
     @State private var shortBreakIndex = 4
     @State private var longBreakIndex = 5
-    @State private var shortBreakNumberIndex = 2
+    @State private var sessionsNumberBeforeLongBreakIndex = 2
     
     var settings: PomodoroSettings
 
@@ -97,8 +97,8 @@ struct SettingsView: View {
                         Text("\(secondsToHoursMinutesSeconds(seconds: $0 * 60))")
                     }
                 }
-                Picker("Long break after:", selection: $shortBreakNumberIndex) {
-                    ForEach(PomodoroSettings.minShortBreakNumber ..< PomodoroSettings.maxShortBreakNumber + 1) {
+                Picker("Long break after:", selection: $sessionsNumberBeforeLongBreakIndex) {
+                    ForEach(PomodoroSettings.minSessionsNumberBeforeLongBreak ..< PomodoroSettings.maxSessionsNumberBeforeLongBreak + 1) {
                         Text("\($0) sessions")
                     }
                 }
@@ -107,12 +107,12 @@ struct SettingsView: View {
             self.pomodoroIndex = settings.getPomodoroIndex()
             self.shortBreakIndex = settings.getShortBreakIndex()
             self.longBreakIndex = settings.getLongBreakIndex()
-            self.shortBreakNumberIndex = settings.getShortBreakTimeNumberIndex()
+            self.sessionsNumberBeforeLongBreakIndex = settings.getSessionsNumberBeforeLongBreakIndex()
         }
         HStack {
             Spacer()
             Button(action: {
-                settings.setSettings(pomodoroIndex: pomodoroIndex, shortBreakIndex: shortBreakIndex, longBreakIndex: longBreakIndex, shortBreakTimeNumberIndex: shortBreakNumberIndex)
+                settings.setSettings(pomodoroIndex: pomodoroIndex, shortBreakIndex: shortBreakIndex, longBreakIndex: longBreakIndex, sessionsNumberBeforeLongBreakIndex: sessionsNumberBeforeLongBreakIndex)
                 presentationMode.wrappedValue.dismiss()
             }) {
                 Text("Save")

@@ -68,7 +68,7 @@ class PomodoroStatistics: Codable, Hashable, Identifiable {
                 delta.minute = settings.pomodoroTime
                 let hourMinutes = Calendar.current.dateComponents([.hour, .minute], from: futureDate)
                 result[Int(hourMinutes.hour! / partInterval)] += 1
-            } else if Int(i) % ((settings.shortBreakTimeNumber + 1) * 2) == 0 {
+            } else if Int(i) % (settings.sessionsNumberBeforeLongBreak * 2) == 0 {
                 delta.minute = settings.longBreakTime
             } else {
                 delta.minute = settings.shortBreakTime

@@ -71,10 +71,10 @@ struct CurrentTaskView: View {
 
             let summary = diffs.second! + diffs.minute! * 60 + diffs.hour! * 3600 + diffs.day! * 3600 * 24
 
-            let session_duration = 60*(settings.pomodoroTime + (settings.pomodoroTime + settings.shortBreakTime) * settings.shortBreakTimeNumber)
+            let session_duration = 60*(settings.pomodoroTime + (settings.pomodoroTime + settings.shortBreakTime) * (settings.sessionsNumberBeforeLongBreak - 1))
             let full_session_duration = 60*settings.longBreakTime + session_duration
             
-            let full_session_pomodoros = Int64(Int(summary / full_session_duration) * (1 + settings.shortBreakTimeNumber))
+            let full_session_pomodoros = Int64(Int(summary / full_session_duration) * settings.sessionsNumberBeforeLongBreak)
             initCompletedPomodoros += full_session_pomodoros
 
             let delta_durations = min(summary % full_session_duration, session_duration)
