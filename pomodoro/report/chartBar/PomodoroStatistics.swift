@@ -34,6 +34,7 @@ class PomodoroStatistics: Codable, Hashable, Identifiable {
                             maxEl = element.meanCompletedPomodoros
                         }
                     }
+                    maxEl = maxEl == 0 ? 1 : maxEl
                     for (index, _) in loadedStatistics.enumerated() {
                         loadedStatistics[index].meanCompletedPomodoros /= (maxEl / 200)
                     }

@@ -98,37 +98,84 @@ struct ContentView: View {
             //                    Text("Tasks Presets")
             //            }
         }
-        }
+    }
+    
+    func actionSheet() {
+        let img = takeScreenshot()
+        showShareActivity(msg:nil, image: img, url: nil, sourceRect: nil)
+    }
+    
+    func takeScreenshot() -> UIImage?{
         
-        func actionSheet() {
-            guard let data = URL(string: "https://www.zoho.com") else { return }
-            let av = UIActivityViewController(activityItems: [data], applicationActivities: nil)
-            UIApplication.shared.windows.first?.rootViewController?.present(av, animated: true, completion: nil)
-        }
-        
-        private func addTask() {
-            withAnimation {
-                PomodoroTimer.allowNotifications()
-                let newTask = Task(context: viewContext)
-                newTask.timestamp = Date()
-                newTask.name = "_New task_"
-                newTask.spoiledPomodoros = Int64(0)
-                newTask.completedPomodoros = Int64(0)
-                newTask.isCompleted = false
-                self.saveData()
-            }
-        }
-        
-        private func deleteTasks(offsets: IndexSet) {
-            withAnimation {
-                offsets.map { tasks[$0] }.forEach(viewContext.delete)
-                self.saveData()
-            }
+        var screenshotImage :UIImage?
+        let layer = UIApplication.shared.windows.first { $0.isKeyWindow }!.layer
+        let scale = UIScreen.main.scale
+        UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, scale);
+        guard let context = UIGraphicsGetCurrentContext() else {return nil}
+        layer.render(in:context)
+        screenshotImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return screenshotImage
+    }
+    
+    private func addTask() {
+        withAnimation {
+            PomodoroTimer.allowNotifications()
+            let newTask = Task(context: viewContext)
+            newTask.timestamp = Date()
+            newTask.name = "_New task_"
+            newTask.spoiledPomodoros = Int64(0)
+            newTask.completedPomodoros = Int64(0)
+            newTask.isCompleted = false
+            self.saveData()
         }
     }
     
-    struct ContentView_Previews: PreviewProvider {
-        static var previews: some View {
-            ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    private func deleteTasks(offsets: IndexSet) {
+        withAnimation {
+            offsets.map { tasks[$0] }.forEach(viewContext.delete)
+            self.saveData()
         }
     }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
+}
+
+func topViewController()-> UIViewController{
+    var topViewController:UIViewController = UIApplication.shared.windows.first { $0.isKeyWindow }!.rootViewController!
+    
+    while ((topViewController.presentedViewController) != nil) {
+        topViewController = topViewController.presentedViewController!;
+    }
+    
+    return topViewController
+}
+
+func showShareActivity(msg:String?, image:UIImage?, url:String?, sourceRect:CGRect?){
+    var objectsToShare = [AnyObject]()
+    
+    if let url = url {
+        objectsToShare = [url as AnyObject]
+    }
+    
+    if let image = image {
+        objectsToShare = [image as AnyObject]
+    }
+    
+    if let msg = msg {
+        objectsToShare = [msg as AnyObject]
+    }
+    
+    let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+    activityVC.modalPresentationStyle = .popover
+    activityVC.popoverPresentationController?.sourceView = topViewController().view
+    if let sourceRect = sourceRect {
+        activityVC.popoverPresentationController?.sourceRect = sourceRect
+    }
+    
+    topViewController().present(activityVC, animated: true, completion: nil)
+}

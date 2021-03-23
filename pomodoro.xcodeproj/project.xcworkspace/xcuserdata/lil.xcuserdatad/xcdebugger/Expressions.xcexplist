@@ -41,6 +41,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "closure #1 in closure #2 in closure #1 in closure #1 in ChartsView.body.getter:ChartsView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "lables[pickerSelectedItem].indices">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in closure #1 in closure #2 in closure #1 in ContentView.TaskView.__preview__body.getter:ContentView.swift">
          <PersistentStrings>
             <PersistentString
@@ -66,6 +74,9 @@
                value = "&quot;\(pomodoroIndex)&quot;">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "static PomodoroStatistics.loadStatisticsSettings(key:isNormalized:):PomodoroStatistics.swift">
       </ContextState>
       <ContextState
          contextName = "closure #2 in closure #1 in closure #1 in ContentView.TaskView.__preview__body.getter:ContentView.swift">
@@ -375,6 +386,14 @@
          <PersistentStrings>
             <PersistentString
                value = "self.timeBeforeBackground">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in closure #2 in closure #1 in closure #1 in ChartsView.body.getter:ChartsView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "dataPoints[pickerSelectedItem].indices">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

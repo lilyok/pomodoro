@@ -116,7 +116,7 @@ struct CurrentTaskView: View {
         for (index, element) in results.enumerated() {
             hourlyStatistics[index].calculate(completedPomodoros: Int64(element))
         }
-        PomodoroStatistics.savePomodoroStatistics(statistic: weekDaylyStatistics, key: "HourlyStatisticsSettings")
+        PomodoroStatistics.savePomodoroStatistics(statistic: hourlyStatistics, key: "HourlyStatisticsSettings")
     }
     
     private func createStrTaskId() -> String {

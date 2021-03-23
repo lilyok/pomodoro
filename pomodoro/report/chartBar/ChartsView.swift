@@ -14,11 +14,9 @@ struct ChartsView: View {
         PomodoroStatistics.loadStatisticsSettings(key: "HourlyStatisticsSettings", isNormalized: true)
     ]
     
-    let lables = [["mon", "tue", "wen", "thu", "fri", "sat", "sun"],
-                  ["12:00am-03:59am", "04:00am-07:59am", "08:00am-11:59am",
-                   "12:00pm-03:59pm", "04:00pm-07:59pm", "08:00pm-11:59pm", "???"]]
-
-//    var timer = Timer.publish(every: 0, on: .main, in: .common).autoconnect()
+    let lables = [["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+                  ["12:00am - 03:59am", "04:00am - 07:59am", "08:00am - 11:59am",
+                   "12:00pm - 03:59pm", "04:00pm - 07:59pm", "08:00pm - 11:59pm"]]
 
     var body: some View {
         ZStack {
@@ -40,13 +38,17 @@ struct ChartsView: View {
                     Rectangle().frame(height: 200)
                         .foregroundColor(.black)
                     HStack(spacing: 2) {
-                        ForEach(dataPoints[pickerSelectedItem].indices) {i in
-                            BarView(value: CGFloat(dataPoints[pickerSelectedItem][i].meanCompletedPomodoros), text: lables[pickerSelectedItem][i])
+                        ForEach(0..<dataPoints[pickerSelectedItem].count, id: \.self) {i in
+                            BarView(value: CGFloat(dataPoints[pickerSelectedItem][i].meanCompletedPomodoros), text: lables[pickerSelectedItem][i]).animation(.easeInOut)
                         }
-                    }//.padding(.top, 24)
-                    .animation(.default)
+                    }
                 }.padding(.horizontal, 24)
             }
+        }.onAppear() {
+            dataPoints = [
+                PomodoroStatistics.loadStatisticsSettings(isNormalized: true),
+                PomodoroStatistics.loadStatisticsSettings(key: "HourlyStatisticsSettings", isNormalized: true)
+            ]
         }
     }
 }
