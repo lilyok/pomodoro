@@ -11,40 +11,58 @@ struct BarView: View {
     var value: CGFloat = 0
     var text: String = ""
     var fgColor: Color = Color.black
-    var barColor: Color = Color.blue
+    var barColor: Color = Color.red
     var body: some View {
-        ZStack(alignment: .bottom) {
-            Capsule().frame(height: value)
-                .foregroundColor(fgColor)
-            Capsule().frame(height: value)
-                .foregroundColor(barColor)
-            Capsule().frame(height: value)
-                .foregroundColor(barColor)
-            Capsule().frame(height: value)
-                .foregroundColor(barColor)
-            Capsule().frame(height: value)
-                .foregroundColor(barColor)
-            Text(text).rotationEffect(Angle(degrees: -90)).foregroundColor(.white).frame(minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, idealHeight: value, maxHeight: value, alignment: .center).font(.system(size: 16)).padding(-5)
+        VStack {
+            ZStack(alignment: .bottom) {
+                Rectangle().frame(height: value)
+                    .foregroundColor(fgColor)
+                Rectangle().frame(height: value)
+                    .foregroundColor(barColor)
+                Rectangle().frame(height: value)
+                    .foregroundColor(barColor)
+                Rectangle().frame(height: value)
+                    .foregroundColor(barColor)
+                Rectangle().frame(height: value)
+                    .foregroundColor(barColor)
+                Text(text).foregroundColor(.white).rotationEffect(.degrees(-90))
+                    .fixedSize()
+                    .frame(width: 20, height: 180, alignment: .center)
+            }.frame(minHeight: 200, alignment: .bottom)
         }
     }
 }
 
 struct BarView_Previews: PreviewProvider {
+
     static var previews: some View {
-        HStack(spacing: 2){
-//            BarView(value: 100, text: "mon", barColor: Color.red)
-//            BarView(value: 150, text: "tue", barColor: Color.red)
-//            BarView(value: 140, text: "wen", barColor: Color.red)
-//            BarView(value: 100, text: "thu", barColor: Color.red)
-//            BarView(value: 100, text: "fri", barColor: Color.red)
-//            BarView(value: 100, text: "sat", barColor: Color.red)
-//            BarView(value: 100, text: "sun", barColor: Color.red)
-            BarView(value: 150, text: "12:00am\n4:00am")
-            BarView(value: 150, text: "4:00am\n8:00am")
-            BarView(value: 150, text: "8:00am\n12:00pm")
-            BarView(value: 150, text: "12:00pm\n04:00pm")
-            BarView(value: 150, text: "12:00pm\n04:00pm")
-            BarView(value: 150, text: "08:00pm\n12:00am")
-        }.padding()
+        
+        ZStack {
+            VStack {
+                Text("The most productive time to work for you")
+                    .font(.system(size: 20))
+                    .fontWeight(.medium)
+                    .foregroundColor(.primary)
+                Text("(based on counting your finished pomodoros)")
+                    .font(.system(size: 12))
+                    .fontWeight(.medium)
+                    .foregroundColor(.primary)
+//                Picker(selection: $pickerSelectedItem, label: Text("")) {
+//                    Text("WeekDays").tag(0)
+//                    Text("Hours").tag(1)
+//                }.pickerStyle(SegmentedPickerStyle())
+                .padding(.horizontal, 24)
+                HStack(spacing: 2) {
+                    BarView(value: 1, text: "12:00am-04:00am")
+                    BarView(value: 1, text: "12:00am-04:00am")
+                    BarView(value: 100, text: "12:00am-04:00am")
+                    BarView(value: 10, text: "12:00am-04:00am")
+                    BarView(value: 0, text: "12:00am-04:00am")
+
+                    BarView(value: 200, text: "12:00am-04:00am")
+                }.padding()
+                .animation(.default)
+            }
+        }
     }
 }

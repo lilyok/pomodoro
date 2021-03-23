@@ -70,6 +70,7 @@ struct TaskView: View {
                 let key = "\(task.name ?? "")_\(task.timestamp ?? Date())"
                 self.runTask = TasksStatus[key] != nil ? TasksStatus[key]! : false
             }
+            isNewTimer = false
             timer.upstream.connect().cancel()
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in

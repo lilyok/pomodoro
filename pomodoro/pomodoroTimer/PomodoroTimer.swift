@@ -46,19 +46,33 @@ class PomodoroTimer {
     }
     
     private func setAllNotifications(maxNumber: Int, isAdditionalRequests: Bool = false) {
+        let userDefaults = UserDefaults.standard
+
+        var initDate: Date? = nil
+        var initIndex: Int? = nil
         if !isAdditionalRequests {
             UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        } else {
+            initDate = userDefaults.object(forKey: "lastNotificationDate") as? Date ?? nil
+            initIndex = userDefaults.object(forKey: "lastNotificationIndex") as? Int ?? nil
         }
-        var currentDate = Date()
+        
+        var currentDate = initDate != nil ? initDate! : Date()
+        var currentIndex = initIndex != nil ? initIndex! : 1000
+
         
         var curIndex = 0
         for _ in 1...maxNumber{
             for i in 1...settings.shortBreakTimeNumber + 1 {
-                currentDate = createNotification(index: 1000 + curIndex, timerType: TimerType.pomodoro, currentDate: currentDate)
-                currentDate = createNotification(index: 1000 + curIndex + 1, timerType: i == settings.shortBreakTimeNumber + 1 ? TimerType.longBreak : TimerType.shortBreak, currentDate: currentDate)
+                currentDate = createNotification(index: currentIndex + curIndex, timerType: TimerType.pomodoro, currentDate: currentDate)
+                currentDate = createNotification(index: currentIndex + curIndex + 1, timerType: i == settings.shortBreakTimeNumber + 1 ? TimerType.longBreak : TimerType.shortBreak, currentDate: currentDate)
                 curIndex += 2
             }
         }
+        currentIndex += curIndex
+        userDefaults.set(currentDate, forKey: "lastNotificationDate")
+        userDefaults.set(currentIndex, forKey: "lastNotificationIndex")
+
     }
 
     public static func allowNotifications() {
@@ -109,7 +123,9 @@ class PomodoroTimer {
                 
                 let localTrigger = request.trigger  as! UNCalendarNotificationTrigger
                 let date = localTrigger.nextTriggerDate()
-
+                if date == nil {
+                    continue
+                }
                 let diffs = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: currentDate, to: date ?? currentDate)
                 let s = diffs.second ?? 0
                 let m = diffs.minute ?? 0
@@ -127,6 +143,9 @@ class PomodoroTimer {
     }
     
     public func stopTimer() {
+        UserDefaults.standard.removeObject(forKey: "lastNotificationDate")
+        UserDefaults.standard.removeObject(forKey: "lastNotificationIndex")
+
         self.isRun = false
         saveTaskSettings()
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()

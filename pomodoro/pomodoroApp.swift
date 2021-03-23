@@ -27,9 +27,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse, withCompletionHandler
         completionHandler: @escaping () -> Void) {
 
-        // do something with the notification
-        print(response.notification.request.content.userInfo)
-
         // the docs say you should execute this asap
         return completionHandler()
     }

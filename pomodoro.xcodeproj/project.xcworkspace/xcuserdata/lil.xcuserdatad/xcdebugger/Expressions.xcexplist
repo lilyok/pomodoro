@@ -36,7 +36,7 @@
                value = "self.currentTimer!.timeRemaining">
             </PersistentString>
             <PersistentString
-               value = "self.timeBeforeBackground!">
+               value = "currentTimer?.timerType">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -158,6 +158,12 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__pthread_kill:(null)">
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in closure #1 in closure #1 in ChartsView.body.getter:ChartsView.swift">
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in closure #1 in closure #2 in closure #1 in ContentView.body.getter:ContentView.swift">
          <PersistentStrings>
             <PersistentString
@@ -212,6 +218,14 @@
             </PersistentString>
             <PersistentString
                value = "task.spoiledPomodoros">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in closure #1 in ChartsView.body.getter:ChartsView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "dataPoints">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -338,7 +352,7 @@
                value = "request.identifier">
             </PersistentString>
             <PersistentString
-               value = "requests.sorted(by: { $0.identifier &lt; $1.identifier } )">
+               value = "request">
             </PersistentString>
             <PersistentString
                value = "self.stopTimes">

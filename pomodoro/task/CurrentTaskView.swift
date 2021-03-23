@@ -33,8 +33,9 @@ struct CurrentTaskView: View {
                 if currentTimer?.timerType == TimerType.pomodoro {
                     self.task.spoiledPomodoros += 1
                 }
+            saveStatisticsSettings()  // strictly before saveTaskTimeSettings
             saveTaskTimeSettings(isStart: false)
-                presentationMode.wrappedValue.dismiss()
+            presentationMode.wrappedValue.dismiss()
         }) {
             Text("time remaining: \(secondsToHoursMinutesSeconds(seconds:  self.timeRemaining ?? 0))")
                 .frame(minWidth: 10, idealWidth: 100, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, idealHeight: 10, maxHeight: .infinity, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
@@ -50,6 +51,9 @@ struct CurrentTaskView: View {
             .cornerRadius(40)
             .onReceive(timer) { time in
                 timeRemaining = self.currentTimer!.getTimeRemaining()
+                if timeRemaining == 0 && currentTimer?.timerType == TimerType.pomodoro {
+                    self.task.completedPomodoros += 1
+                }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
                 calculateMeasures()
@@ -72,10 +76,8 @@ struct CurrentTaskView: View {
             
             let full_session_pomodoros = Int64(Int(summary / full_session_duration) * (1 + settings.shortBreakTimeNumber))
             initCompletedPomodoros += full_session_pomodoros
-            print(initTime!, currentDate, initCompletedPomodoros, full_session_pomodoros, self.task.completedPomodoros)
 
             let delta_durations = min(summary % full_session_duration, session_duration)
-            print(delta_durations, (delta_durations + settings.shortBreakTime * 60) / 60 , settings.shortBreakTime + settings.pomodoroTime)
 
             if delta_durations > settings.pomodoroTime {
                 initCompletedPomodoros += Int64((delta_durations + settings.shortBreakTime * 60) / 60 / (settings.shortBreakTime + settings.pomodoroTime))
@@ -97,13 +99,25 @@ struct CurrentTaskView: View {
     }
 
 
-//    private func saveStatisticsSettings() {
-//        let weekday = Calendar.current.component(.weekday, from: Date())
-//        let userDefaults = UserDefaults.standard
-//        var settings = userDefaults.object(forKey: "WeekDailyStatisticsSettings") as? [String:Int64] ?? [:]
-//        settings[String(weekday)] = self.task.completedPomodoros
-//        userDefaults.set(settings, forKey: "WeekDailyStatisticsSettings")
-//    }
+    private func saveStatisticsSettings() {
+        let userDefaults = UserDefaults.standard
+        let initDate = userDefaults.object(forKey: "InitTaskTime") as! Date
+        let initCompletedPomodoros = userDefaults.object(forKey: "InitCompletedPomodoros") as! Int64
+        let completedPomodorosBySession: Int64 = self.task.completedPomodoros - initCompletedPomodoros
+
+        var weekday = Calendar.current.component(.weekday, from: initDate)
+        weekday = weekday == 1 ? 6 : weekday - 2  // sun(1), mon(2) .. sat(7) => mon(0), tue(1) .. sun(6)
+        let weekDaylyStatistics = PomodoroStatistics.loadStatisticsSettings()
+        weekDaylyStatistics[weekday].calculate(completedPomodoros: completedPomodorosBySession)
+        PomodoroStatistics.savePomodoroStatistics(statistic: weekDaylyStatistics)
+        
+        let results = PomodoroStatistics.calculatePartsOfTheDay(initDate: initDate, completedPomodorosBySession: completedPomodorosBySession, settings: settings)
+        let hourlyStatistics = PomodoroStatistics.loadStatisticsSettings(key: "HourlyStatisticsSettings")
+        for (index, element) in results.enumerated() {
+            hourlyStatistics[index].calculate(completedPomodoros: Int64(element))
+        }
+        PomodoroStatistics.savePomodoroStatistics(statistic: weekDaylyStatistics, key: "HourlyStatisticsSettings")
+    }
     
     private func createStrTaskId() -> String {
         return "\(task.name ?? "")_\(task.timestamp ?? Date())"

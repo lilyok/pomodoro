@@ -9,13 +9,17 @@ import SwiftUI
 
 struct ChartsView: View {
     @State private var pickerSelectedItem = 0
-    @State private var dataPoints: [[CGFloat]] = [
-        [100, 120, 150],
-        [150, 100, 120],
-        [120, 150, 100],
-        [120, 100, 150],
-        [130, 50, 100]
+    @State private var dataPoints: [[PomodoroStatistics]] = [
+        PomodoroStatistics.loadStatisticsSettings(isNormalized: true),
+        PomodoroStatistics.loadStatisticsSettings(key: "HourlyStatisticsSettings", isNormalized: true)
     ]
+    
+    let lables = [["mon", "tue", "wen", "thu", "fri", "sat", "sun"],
+                  ["12:00am-03:59am", "04:00am-07:59am", "08:00am-11:59am",
+                   "12:00pm-03:59pm", "04:00pm-07:59pm", "08:00pm-11:59pm", "???"]]
+
+//    var timer = Timer.publish(every: 0, on: .main, in: .common).autoconnect()
+
     var body: some View {
         ZStack {
             VStack {
@@ -28,38 +32,20 @@ struct ChartsView: View {
                     .fontWeight(.medium)
                     .foregroundColor(.primary)
                 Picker(selection: $pickerSelectedItem, label: Text("")) {
-                    Text("Daily").tag(0)
-                    Text("Weekly").tag(1)
-                    Text("Monthly").tag(2)
-                    Text("Yearly").tag(3)
+                    Text("WeekDays").tag(0)
+                    Text("Hours").tag(1)
                 }.pickerStyle(SegmentedPickerStyle())
                 .padding(.horizontal, 24)
-                HStack(spacing: 1) {
-                    BarView(value: dataPoints[pickerSelectedItem][0], text: "12:00am\n4:00am")
-                    BarView(value: dataPoints[pickerSelectedItem][1], text: "4:00am\n8:00am")
-                    BarView(value: dataPoints[pickerSelectedItem][2], text: "8:00am\n12:00pm")
-                    BarView(value: dataPoints[pickerSelectedItem][2], text: "12:00pm\n04:00pm")
-                    BarView(value: dataPoints[pickerSelectedItem][2], text: "12:00pm\n04:00pm")
-                    BarView(value: dataPoints[pickerSelectedItem][2], text: "08:00pm\n12:00am")
-                }.padding()//.padding(.top, 24)
-                .animation(.default)
-
-                Picker(selection: $pickerSelectedItem, label: Text("")) {
-                    Text("Weekly").tag(1)
-                    Text("Monthly").tag(2)
-                    Text("Yearly").tag(3)
-                }.pickerStyle(SegmentedPickerStyle())
-                .padding(.horizontal, 1)
-                HStack(spacing: 12) {
-                    BarView(value: dataPoints[pickerSelectedItem][0], text: "mon", barColor: Color.red)
-                    BarView(value: dataPoints[pickerSelectedItem][1], text: "tue", barColor: Color.red)
-                    BarView(value: dataPoints[pickerSelectedItem][2], text: "wen", barColor: Color.red)
-                    BarView(value: dataPoints[pickerSelectedItem][2], text: "thu", barColor: Color.red)
-                    BarView(value: dataPoints[pickerSelectedItem][2], text: "fri", barColor: Color.red)
-                    BarView(value: dataPoints[pickerSelectedItem][2], text: "sat", barColor: Color.red)
-                    BarView(value: dataPoints[pickerSelectedItem][2], text: "sun", barColor: Color.red)
-                }.padding()//.padding(.top, 24)
-                .animation(.default)
+                ZStack {
+                    Rectangle().frame(height: 200)
+                        .foregroundColor(.black)
+                    HStack(spacing: 2) {
+                        ForEach(dataPoints[pickerSelectedItem].indices) {i in
+                            BarView(value: CGFloat(dataPoints[pickerSelectedItem][i].meanCompletedPomodoros), text: lables[pickerSelectedItem][i])
+                        }
+                    }//.padding(.top, 24)
+                    .animation(.default)
+                }.padding(.horizontal, 24)
             }
         }
     }
