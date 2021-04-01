@@ -47,16 +47,14 @@ class PomodoroTimer {
     
     private func setAllNotifications(maxNumber: Int, isAdditionalRequests: Bool = false) {
         let userDefaults = UserDefaults.standard
+        userDefaults.set(false, forKey: "firstSetOfNotificationsComplete")
 
-        var initDate: Date? = nil
-        var initIndex: Int? = nil
         if !isAdditionalRequests {
-            UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-        } else {
-            initDate = userDefaults.object(forKey: "lastNotificationDate") as? Date ?? nil
-            initIndex = userDefaults.object(forKey: "lastNotificationIndex") as? Int ?? nil
+            clearAll()
         }
-        
+        let initDate = userDefaults.object(forKey: "lastNotificationDate") as? Date ?? nil
+        let initIndex = userDefaults.object(forKey: "lastNotificationIndex") as? Int ?? nil
+
         var currentDate = initDate != nil ? initDate! : Date()
         var currentIndex = initIndex != nil ? initIndex! : 1000
 
@@ -72,7 +70,7 @@ class PomodoroTimer {
         currentIndex += curIndex
         userDefaults.set(currentDate, forKey: "lastNotificationDate")
         userDefaults.set(currentIndex, forKey: "lastNotificationIndex")
-
+        userDefaults.set(true, forKey: "firstSetOfNotificationsComplete")
     }
 
     public static func allowNotifications() {
@@ -115,7 +113,7 @@ class PomodoroTimer {
         let center = UNUserNotificationCenter.current()
         center.getPendingNotificationRequests(completionHandler: { requests in
             let freeSessionsCount = (PomodoroSettings.maxNotificatiosNumber - requests.count) / self.settings.sessionsNumberBeforeLongBreak / 2
-            if self.isRun && freeSessionsCount > 0 {
+            if self.isRun && freeSessionsCount > 0 && UserDefaults.standard.object(forKey: "firstSetOfNotificationsComplete") as? Bool ?? false {
                 self.setAllNotifications(maxNumber: freeSessionsCount, isAdditionalRequests: true)
             }
             for request in requests.sorted(by: { $0.identifier < $1.identifier } ) {
@@ -142,13 +140,18 @@ class PomodoroTimer {
         return self.timeRemaining
     }
     
-    public func stopTimer() {
+    private func clearAll() {
         UserDefaults.standard.removeObject(forKey: "lastNotificationDate")
         UserDefaults.standard.removeObject(forKey: "lastNotificationIndex")
+        UserDefaults.standard.removeObject(forKey: "firstSetOfNotificationsComplete")
 
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+
+    }
+    public func stopTimer() {
+        clearAll()
         self.isRun = false
         saveTaskSettings()
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
         _ = createNotification(index: 0, timerType: "", currentDate: Date(), isBreak: true)
     }
     
