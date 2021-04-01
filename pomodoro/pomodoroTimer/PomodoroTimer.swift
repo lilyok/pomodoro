@@ -18,7 +18,7 @@ class PomodoroTimer {
     init(taskId: String, settings: PomodoroSettings, isNewTimer: Bool) {
         self.taskId = taskId
         self.settings = settings
-        self.timeRemaining = -1
+        self.timeRemaining = settings.pomodoroTime * 60
         if isNewTimer {
             self.setAllNotifications(maxNumber: PomodoroSettings.maxNotificatiosNumber / settings.sessionsNumberBeforeLongBreak / 2)
         } else {
