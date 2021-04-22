@@ -40,6 +40,12 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
+            // TODO adviser
+            Adviser()
+            .tabItem {
+                    Image(systemName: "doc.text.magnifyingglass")
+                    Text("Tasks Presets")
+            }
             NavigationView {
                 List {
                     ForEach(tasks) { task in
@@ -91,12 +97,6 @@ struct ContentView: View {
                 Image(systemName: "chart.bar")
                 Text("Statistics")
             }
-            // TODO recommendator
-            //            Text("Search presets for your goal")
-            //                .tabItem {
-            //                    Image(systemName: "doc.text.magnifyingglass")
-            //                    Text("Tasks Presets")
-            //            }
         }
     }
     

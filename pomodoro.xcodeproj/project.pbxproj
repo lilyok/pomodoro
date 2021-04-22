@@ -24,6 +24,9 @@
 		26D213A825EFF31300257AED /* TaskDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D213A725EFF31300257AED /* TaskDetailsView.swift */; };
 		26D213B025F0062800257AED /* Preview Content in Resources */ = {isa = PBXBuildFile; fileRef = 26D213AF25F0062800257AED /* Preview Content */; };
 		26D213B525F52C7800257AED /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D213B425F52C7800257AED /* SettingsView.swift */; };
+		26E55996263098C800B2972E /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E55995263098C800B2972E /* SearchBar.swift */; };
+		26E5599E26309CF000B2972E /* Advices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5599D26309CF000B2972E /* Advices.swift */; };
+		26E559A62631CB5300B2972E /* AdvicerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E559A52631CB5300B2972E /* AdvicerResponse.swift */; };
 		26E6282E25E59CF700AB3BF8 /* Task+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E6282C25E59CF700AB3BF8 /* Task+CoreDataClass.swift */; };
 		26E6282F25E59CF700AB3BF8 /* Task+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E6282D25E59CF700AB3BF8 /* Task+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
@@ -69,6 +72,9 @@
 		26D213A725EFF31300257AED /* TaskDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsView.swift; sourceTree = "<group>"; };
 		26D213AF25F0062800257AED /* Preview Content */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Preview Content"; sourceTree = "<group>"; };
 		26D213B425F52C7800257AED /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		26E55995263098C800B2972E /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		26E5599D26309CF000B2972E /* Advices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advices.swift; sourceTree = "<group>"; };
+		26E559A52631CB5300B2972E /* AdvicerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvicerResponse.swift; sourceTree = "<group>"; };
 		26E6282C25E59CF700AB3BF8 /* Task+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataClass.swift"; sourceTree = "<group>"; };
 		26E6282D25E59CF700AB3BF8 /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -123,6 +129,7 @@
 		26AF75E925E0501D00BA2776 /* pomodoro */ = {
 			isa = PBXGroup;
 			children = (
+				26E559942630989800B2972E /* adviser */,
 				26B006C0260110D200A99086 /* report */,
 				26B006BC26010F7400A99086 /* common */,
 				26B006BB26010F3500A99086 /* task */,
@@ -178,6 +185,7 @@
 		26B006BC26010F7400A99086 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				26E55995263098C800B2972E /* SearchBar.swift */,
 				26D2139D25EFDF1A00257AED /* Untilities.swift */,
 			);
 			path = common;
@@ -199,6 +207,15 @@
 				26A680C12607AD9A0085B0C2 /* PomodoroStatistics.swift */,
 			);
 			path = chartBar;
+			sourceTree = "<group>";
+		};
+		26E559942630989800B2972E /* adviser */ = {
+			isa = PBXGroup;
+			children = (
+				26E5599D26309CF000B2972E /* Advices.swift */,
+				26E559A52631CB5300B2972E /* AdvicerResponse.swift */,
+			);
+			path = adviser;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -335,10 +352,13 @@
 				26E6282E25E59CF700AB3BF8 /* Task+CoreDataClass.swift in Sources */,
 				26B006B426010ECD00A99086 /* TaskView.swift in Sources */,
 				26B006CF2601191900A99086 /* ChartsView.swift in Sources */,
+				26E5599E26309CF000B2972E /* Advices.swift in Sources */,
+				26E55996263098C800B2972E /* SearchBar.swift in Sources */,
 				26D213A825EFF31300257AED /* TaskDetailsView.swift in Sources */,
 				26B006C72601189500A99086 /* BarView.swift in Sources */,
 				26D2139925EFDE1F00257AED /* PomodoroTimer.swift in Sources */,
 				26AF75F425E0501E00BA2776 /* Persistence.swift in Sources */,
+				26E559A62631CB5300B2972E /* AdvicerResponse.swift in Sources */,
 				26A680C22607AD9A0085B0C2 /* PomodoroStatistics.swift in Sources */,
 				26AF75ED25E0501D00BA2776 /* ContentView.swift in Sources */,
 				26D2139E25EFDF1A00257AED /* Untilities.swift in Sources */,
