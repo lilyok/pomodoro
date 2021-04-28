@@ -9,7 +9,7 @@ import SwiftUI
 
 class PomodoroStatistics: Codable, Hashable, Identifiable {
     static func == (lhs: PomodoroStatistics, rhs: PomodoroStatistics) -> Bool {
-        return lhs.meanCompletedPomodoros < rhs.meanCompletedPomodoros
+        return lhs.meanCompletedPomodoros == rhs.meanCompletedPomodoros
     }
     
     func hash(into hasher: inout Hasher) {

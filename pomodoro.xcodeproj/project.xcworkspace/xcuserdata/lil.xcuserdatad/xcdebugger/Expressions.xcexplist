@@ -14,18 +14,18 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #2 in closure #1 in closure #1 in ContentView.TaskDetails.body.getter:ContentView.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.task.name">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "CurrentTaskView.saveTimeBeforeBackgroundSettings():CurrentTaskView.swift">
          <PersistentStrings>
             <PersistentString
                value = "self.timeBeforeBackground">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in closure #1 in closure #1 in ContentView.TaskDetails.body.getter:ContentView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.task.name">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -39,6 +39,9 @@
                value = "currentTimer?.timerType">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #3 in closure #1 in closure #1 in Adviser.body.getter:Advices.swift">
       </ContextState>
       <ContextState
          contextName = "closure #1 in closure #2 in closure #1 in closure #1 in ChartsView.body.getter:ChartsView.swift">
@@ -68,6 +71,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "static PomodoroStatistics.loadStatisticsSettings(key:isNormalized:):PomodoroStatistics.swift">
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in closure #1 in SettingsView.body.getter:ContentView.swift">
          <PersistentStrings>
             <PersistentString
@@ -76,7 +82,7 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "static PomodoroStatistics.loadStatisticsSettings(key:isNormalized:):PomodoroStatistics.swift">
+         contextName = "static Topic.== infix(_:_:):AdvicerResponse.swift">
       </ContextState>
       <ContextState
          contextName = "closure #2 in closure #1 in closure #1 in ContentView.TaskView.__preview__body.getter:ContentView.swift">
@@ -114,6 +120,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "closure #1 in AdviceSearcher.body.getter:Advices.swift">
+      </ContextState>
+      <ContextState
          contextName = "closure #2 in TaskView.body.getter:TaskView.swift">
       </ContextState>
       <ContextState
@@ -136,6 +145,9 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "__pthread_kill:(null)">
+      </ContextState>
+      <ContextState
          contextName = "PomodoroTimer.init(settings:):PomodoroTimer.swift">
          <PersistentStrings>
             <PersistentString
@@ -145,6 +157,9 @@
                value = "settings.shortBreakTimeNumber + 1">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in closure #1 in closure #1 in ChartsView.body.getter:ChartsView.swift">
       </ContextState>
       <ContextState
          contextName = "closure #1 in closure #1 in closure #1 in TaskView.body.getter:TaskView.swift">
@@ -161,18 +176,12 @@
                value = "minPomodoroTime">
             </PersistentString>
             <PersistentString
-               value = "settings.pomodoroTime">
-            </PersistentString>
-            <PersistentString
                value = "self.pomodoroIndex">
             </PersistentString>
+            <PersistentString
+               value = "settings.pomodoroTime">
+            </PersistentString>
          </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "__pthread_kill:(null)">
-      </ContextState>
-      <ContextState
-         contextName = "closure #2 in closure #1 in closure #1 in ChartsView.body.getter:ChartsView.swift">
       </ContextState>
       <ContextState
          contextName = "closure #1 in closure #1 in closure #2 in closure #1 in ContentView.body.getter:ContentView.swift">
@@ -219,6 +228,17 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "ReadyMadePlanDetails.saveReadyMadePlans():Advices.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in closure #1 in ChartsView.body.getter:ChartsView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "dataPoints">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #2 in ContentView.TaskDetails.__preview__body.getter:ContentView.swift">
          <PersistentStrings>
             <PersistentString
@@ -229,14 +249,6 @@
             </PersistentString>
             <PersistentString
                value = "task.spoiledPomodoros">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "closure #2 in closure #1 in ChartsView.body.getter:ChartsView.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "dataPoints">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -309,16 +321,24 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "closure #1 in closure #1 in closure #3 in closure #1 in closure #1 in Adviser.body.getter:Advices.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "plan.title">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in closure #2 in CurrentTaskView.body.getter:CurrentTaskView.swift">
       </ContextState>
       <ContextState
          contextName = "closure #1 in closure #1 in SettingsView.__preview__body.getter:ContentView.swift">
          <PersistentStrings>
             <PersistentString
-               value = "self.pomodoroIndex">
+               value = "settings.pomodoroTime">
             </PersistentString>
             <PersistentString
-               value = "settings.pomodoroTime">
+               value = "self.pomodoroIndex">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -351,13 +371,16 @@
          contextName = "closure #1 in PomodoroTimer.getTimeRemaining():PomodoroTimer.swift">
          <PersistentStrings>
             <PersistentString
-               value = "Int(self.getTimeByType(timerType: self.timerType))">
+               value = "self.timerType">
             </PersistentString>
             <PersistentString
                value = "self.settings.shortBreakTimeNumber + 1">
             </PersistentString>
             <PersistentString
                value = "currentDate!">
+            </PersistentString>
+            <PersistentString
+               value = "Int(self.getTimeByType(timerType: self.timerType))">
             </PersistentString>
             <PersistentString
                value = "request.identifier">
@@ -367,9 +390,6 @@
             </PersistentString>
             <PersistentString
                value = "self.stopTimes">
-            </PersistentString>
-            <PersistentString
-               value = "self.timerType">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		26187B4F263977FD00C8AA97 /* Task+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26187B47263977FD00C8AA97 /* Task+CoreDataClass.swift */; };
+		26187B50263977FD00C8AA97 /* Task+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26187B48263977FD00C8AA97 /* Task+CoreDataProperties.swift */; };
+		26187B51263977FD00C8AA97 /* TipLink+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26187B49263977FD00C8AA97 /* TipLink+CoreDataClass.swift */; };
+		26187B52263977FD00C8AA97 /* TipLink+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26187B4A263977FD00C8AA97 /* TipLink+CoreDataProperties.swift */; };
+		26187B53263977FD00C8AA97 /* GoalTips+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26187B4B263977FD00C8AA97 /* GoalTips+CoreDataClass.swift */; };
+		26187B54263977FD00C8AA97 /* GoalTips+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26187B4C263977FD00C8AA97 /* GoalTips+CoreDataProperties.swift */; };
+		26187B55263977FD00C8AA97 /* GoalTip+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26187B4D263977FD00C8AA97 /* GoalTip+CoreDataClass.swift */; };
+		26187B56263977FD00C8AA97 /* GoalTip+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26187B4E263977FD00C8AA97 /* GoalTip+CoreDataProperties.swift */; };
 		26A680C22607AD9A0085B0C2 /* PomodoroStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26A680C12607AD9A0085B0C2 /* PomodoroStatistics.swift */; };
 		26AF75EB25E0501D00BA2776 /* pomodoroApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AF75EA25E0501D00BA2776 /* pomodoroApp.swift */; };
 		26AF75ED25E0501D00BA2776 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AF75EC25E0501D00BA2776 /* ContentView.swift */; };
@@ -27,8 +35,6 @@
 		26E55996263098C800B2972E /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E55995263098C800B2972E /* SearchBar.swift */; };
 		26E5599E26309CF000B2972E /* Advices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E5599D26309CF000B2972E /* Advices.swift */; };
 		26E559A62631CB5300B2972E /* AdvicerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E559A52631CB5300B2972E /* AdvicerResponse.swift */; };
-		26E6282E25E59CF700AB3BF8 /* Task+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E6282C25E59CF700AB3BF8 /* Task+CoreDataClass.swift */; };
-		26E6282F25E59CF700AB3BF8 /* Task+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26E6282D25E59CF700AB3BF8 /* Task+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +55,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		26187B47263977FD00C8AA97 /* Task+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataClass.swift"; sourceTree = "<group>"; };
+		26187B48263977FD00C8AA97 /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		26187B49263977FD00C8AA97 /* TipLink+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TipLink+CoreDataClass.swift"; sourceTree = "<group>"; };
+		26187B4A263977FD00C8AA97 /* TipLink+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TipLink+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		26187B4B263977FD00C8AA97 /* GoalTips+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoalTips+CoreDataClass.swift"; sourceTree = "<group>"; };
+		26187B4C263977FD00C8AA97 /* GoalTips+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoalTips+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		26187B4D263977FD00C8AA97 /* GoalTip+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoalTip+CoreDataClass.swift"; sourceTree = "<group>"; };
+		26187B4E263977FD00C8AA97 /* GoalTip+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoalTip+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		26A680C12607AD9A0085B0C2 /* PomodoroStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroStatistics.swift; sourceTree = "<group>"; };
 		26AF75E725E0501D00BA2776 /* pomodoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pomodoro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26AF75EA25E0501D00BA2776 /* pomodoroApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pomodoroApp.swift; sourceTree = "<group>"; };
@@ -75,8 +89,6 @@
 		26E55995263098C800B2972E /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		26E5599D26309CF000B2972E /* Advices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advices.swift; sourceTree = "<group>"; };
 		26E559A52631CB5300B2972E /* AdvicerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvicerResponse.swift; sourceTree = "<group>"; };
-		26E6282C25E59CF700AB3BF8 /* Task+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataClass.swift"; sourceTree = "<group>"; };
-		26E6282D25E59CF700AB3BF8 /* Task+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,8 +119,14 @@
 		26AF75DE25E0501D00BA2776 = {
 			isa = PBXGroup;
 			children = (
-				26E6282C25E59CF700AB3BF8 /* Task+CoreDataClass.swift */,
-				26E6282D25E59CF700AB3BF8 /* Task+CoreDataProperties.swift */,
+				26187B47263977FD00C8AA97 /* Task+CoreDataClass.swift */,
+				26187B48263977FD00C8AA97 /* Task+CoreDataProperties.swift */,
+				26187B49263977FD00C8AA97 /* TipLink+CoreDataClass.swift */,
+				26187B4A263977FD00C8AA97 /* TipLink+CoreDataProperties.swift */,
+				26187B4B263977FD00C8AA97 /* GoalTips+CoreDataClass.swift */,
+				26187B4C263977FD00C8AA97 /* GoalTips+CoreDataProperties.swift */,
+				26187B4D263977FD00C8AA97 /* GoalTip+CoreDataClass.swift */,
+				26187B4E263977FD00C8AA97 /* GoalTip+CoreDataProperties.swift */,
 				26AF75E925E0501D00BA2776 /* pomodoro */,
 				26AF760025E0501E00BA2776 /* pomodoroTests */,
 				26AF760B25E0501E00BA2776 /* pomodoroUITests */,
@@ -348,21 +366,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				26D213A325EFF2CA00257AED /* CurrentTaskView.swift in Sources */,
+				26187B4F263977FD00C8AA97 /* Task+CoreDataClass.swift in Sources */,
 				26AF75F725E0501E00BA2776 /* pomodoro.xcdatamodeld in Sources */,
-				26E6282E25E59CF700AB3BF8 /* Task+CoreDataClass.swift in Sources */,
 				26B006B426010ECD00A99086 /* TaskView.swift in Sources */,
+				26187B55263977FD00C8AA97 /* GoalTip+CoreDataClass.swift in Sources */,
+				26187B50263977FD00C8AA97 /* Task+CoreDataProperties.swift in Sources */,
 				26B006CF2601191900A99086 /* ChartsView.swift in Sources */,
+				26187B54263977FD00C8AA97 /* GoalTips+CoreDataProperties.swift in Sources */,
+				26187B52263977FD00C8AA97 /* TipLink+CoreDataProperties.swift in Sources */,
 				26E5599E26309CF000B2972E /* Advices.swift in Sources */,
 				26E55996263098C800B2972E /* SearchBar.swift in Sources */,
 				26D213A825EFF31300257AED /* TaskDetailsView.swift in Sources */,
+				26187B56263977FD00C8AA97 /* GoalTip+CoreDataProperties.swift in Sources */,
+				26187B51263977FD00C8AA97 /* TipLink+CoreDataClass.swift in Sources */,
 				26B006C72601189500A99086 /* BarView.swift in Sources */,
 				26D2139925EFDE1F00257AED /* PomodoroTimer.swift in Sources */,
+				26187B53263977FD00C8AA97 /* GoalTips+CoreDataClass.swift in Sources */,
 				26AF75F425E0501E00BA2776 /* Persistence.swift in Sources */,
 				26E559A62631CB5300B2972E /* AdvicerResponse.swift in Sources */,
 				26A680C22607AD9A0085B0C2 /* PomodoroStatistics.swift in Sources */,
 				26AF75ED25E0501D00BA2776 /* ContentView.swift in Sources */,
 				26D2139E25EFDF1A00257AED /* Untilities.swift in Sources */,
-				26E6282F25E59CF700AB3BF8 /* Task+CoreDataProperties.swift in Sources */,
 				26AF75EB25E0501D00BA2776 /* pomodoroApp.swift in Sources */,
 				26D213B525F52C7800257AED /* SettingsView.swift in Sources */,
 			);

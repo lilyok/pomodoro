@@ -7,20 +7,252 @@
 
 import SwiftUI
 
+
+struct TipList: View {
+    let title: String
+    let plan: [GoalTip]
+
+
+    @State private var isExpanded: Bool = false
+    @State private var selection: String = ""
+    
+    private func selectDeselect(_ title: String) {
+        if (selection == title) {
+            selection = ""
+            return
+        }
+        selection = title
+    }
+
+    var body: some View {
+        VStack{
+            VStack{
+                Text(title).font(.system(size: 20))
+                    .fontWeight(.medium)
+                    .multilineTextAlignment(.center).frame(maxWidth: .infinity, alignment: .center)
+                    .padding(15)
+
+                    VStack {
+                        Button(action: {isExpanded.toggle()}) {
+                            Label("Show Tips", systemImage: "list.triangle").frame(maxWidth: .infinity)
+                        }.buttonStyle(BorderlessButtonStyle()).frame(maxWidth: .infinity, minHeight: 30)
+                        .foregroundColor(.black).background(Color.yellow).cornerRadius(15)
+                        if (isExpanded) {
+                            ScrollView {
+                                ForEach(plan) { item in
+                                    TipDetails(task: item, isExpanded: self.selection == item.name)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 15)
+                                                .stroke(Color.yellow, lineWidth: 4)
+                                        )
+                                        
+                                        .cornerRadius(15)
+                                        
+                                        .padding(1)
+                                        .onTapGesture { self.selectDeselect(item.name ?? "") }
+                                        .animation(.linear(duration: 0.3))
+                                }
+                            }.padding(.horizontal, 15).animation(.linear(duration: 0.5))
+                        }
+                    }.overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color.yellow, lineWidth: 4)
+                    )
+            }
+        }
+    }
+}
+
+struct TipDetails: View {
+    let task: GoalTip
+    let isExpanded: Bool
+    
+    var body: some View {
+        VStack {
+            Text(task.name ?? "")
+                .font(.system(size: 18))
+                .fontWeight(.medium)
+                .padding()
+                .frame(minHeight: 50)
+                .foregroundColor(.black)
+                .multilineTextAlignment(.center).frame(maxWidth: .infinity, alignment: .center)
+                .background(Color.yellow)
+            
+            if isExpanded {
+                ForEach((task.links?.allObjects as? [TipLink] ?? [])) { item in
+                    Text(item.text!).foregroundColor(.primary).font(.system(size: 16))
+                        .fontWeight(.medium)
+                        .multilineTextAlignment(.center).frame(maxWidth: .infinity, alignment: .center)
+                    if item.link != "" {
+                        Link("Open the resource", destination: URL(string: item.link!)!)
+                            .frame( alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            .padding()
+                            .foregroundColor(Color.black)
+                            .background(Color.yellow)
+                            .cornerRadius(40).buttonStyle(BorderlessButtonStyle())
+                    }
+                    Divider().background(Color.yellow)
+                }.padding(.horizontal, 7)
+            }
+        }
+    }
+}
+
+
 struct Adviser: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(
+        sortDescriptors: [
+            NSSortDescriptor(keyPath: \GoalTips.title, ascending: true),
+        ],
+        animation: .default)
+    private var plans: FetchedResults<GoalTips>
+    
+    @State private var isLoading = false
+    @State private var summaryCount = 0
+    
+    var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
+    var body: some View {
+        NavigationView {
+            VStack {
+                if (plans.count == 0) {
+                    Text("You haven't added anything yet..").padding(.top, 2)
+                }
+                NavigationLink(destination: AdviceSearcher()) {
+                    HStack{
+                        Spacer()
+                        Label("Find tips for your new goal", systemImage: "plus")
+                            .padding()
+                            .foregroundColor(Color.black)
+                            .background(Color.yellow)
+                            .cornerRadius(40)
+                            .padding(5)
+                        Spacer()
+                    }
+                }.onAppear(perform: loadAdvices)
+                if (isLoading) {
+                    ProgressView("Loading").foregroundColor(.yellow)
+                        .scaleEffect(1.5, anchor: .center)
+                        .progressViewStyle(CircularProgressViewStyle(tint: .yellow))
+                } else {
+                    List {
+                        ForEach(self.plans) { plan in
+                            TipList(title: plan.title!, plan: plan.goalTips?.allObjects as? [GoalTip] ?? [])
+                        }.onDelete(perform: deletePlans)
+                        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+                            saveData()
+                        }
+                    }
+                }
+            }.navigationBarTitleDisplayMode(.inline)
+            .toolbar(content: {
+                        ToolbarItem(placement: .principal, content: {Text("Added goals")})})
+        }.onReceive(timer) { _ in
+            if (self.isLoading && self.summaryCount == self.plans.count) {
+                self.isLoading = false
+                self.viewContext.refreshAllObjects()
+                
+            } else if (self.summaryCount == self.plans.count) {
+                timer.upstream.connect().cancel()
+            }
+            
+        }
+    }
+
+    private func deletePlans(offsets: IndexSet) {
+        offsets.map { plans[$0] }.forEach { (el : GoalTips) in
+            setReadyMadePlanVersion(link: el.link!, version: nil)
+        }
+        withAnimation {
+            offsets.map { plans[$0] }.forEach(viewContext.delete)
+            self.saveData()
+        }
+    }
+    
+    func loadAdvices() {
+        let linkToDownload = getTopicsToDownlad()
+        self.summaryCount = self.plans.count + linkToDownload.count
+        
+        if (linkToDownload.count == 0) {
+            return
+        }
+        self.isLoading = true
+        for el in linkToDownload {
+            self.loadData(title: el.title, link: el.link)
+        }
+        clearTopicsToDownlad()
+    }
+    
+    func loadData(title: String, link: String) {
+        guard let url = URL(string: "https://adviser-lilyok.vercel.app/api?topic=" + link) else {
+            print("Invalid URL")
+            return
+        }
+        let request = URLRequest(url: url)
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                if let decodedResponse = try? JSONDecoder().decode(TopicDetailsResponse.self, from: data) {
+                    DispatchQueue.main.async {
+                        let adviceDetails = decodedResponse.data
+                        addTask(title: title, link: link, adviceDetails: adviceDetails)
+                    }
+                    return
+                }
+            }
+            print("Fetch failed: \(error?.localizedDescription ?? "Unknown error")")
+            
+        }.resume()
+    }
+    
+    func addTask(title:String, link: String, adviceDetails: [TopicTaskDetails]) {
+        withAnimation {
+            let newPlan = GoalTips(context: viewContext)
+            newPlan.title = title
+            newPlan.link = link
+            
+            for tip in adviceDetails {
+                let goalTip = GoalTip(context: viewContext)
+                goalTip.name = tip.title
+                goalTip.timestamp = Date()
+                goalTip.spoiledPomodoros = Int64(0)
+                goalTip.completedPomodoros = Int64(0)
+                goalTip.isCompleted = false
+                
+                for link in tip.references.links {
+                    let tipLink = TipLink(context: viewContext)
+                    tipLink.link = link.link
+                    tipLink.text = link.description
+                    tipLink.tip = goalTip
+                }
+                goalTip.goal = newPlan
+            }
+            self.saveData()
+        }
+    }
+    
+    func saveData() {
+        do {
+            try viewContext.save()
+        } catch {
+            // Replace this implementation with code to handle the error appropriately.
+            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+}
+
+struct AdviceSearcher: View {
     @State private var searchText = ""
     @State private var adviceNames = [Topic]()
     
     var body: some View {
-        VStack {
-            SearchBar(text: $searchText).padding(.top)
-            List(adviceNames.filter({searchText.isEmpty ? true : $0.title.lowercased().contains(searchText.lowercased())}), id: \.link) { item in
-                VStack(alignment: .leading) {
-                    ReadyMadePlan(title: item.title, link: item.link)
-                }
-            }
-            .onAppear(perform: loadData)
+        SearchBar(gapText: "Search your goal...", text: $searchText)
+        List(adviceNames.filter({searchText.isEmpty ? true : $0.title.lowercased().contains(searchText.lowercased())}), id: \.link) { item in
+            ReadyMadePlan(topic: item)
         }
+        .onAppear(perform: loadData)
     }
     
     func loadData() {
@@ -45,25 +277,32 @@ struct Adviser: View {
 }
 
 struct ReadyMadePlan: View {
-    private let title: String
-    private let link: String
+    private let topic: Topic
     
     @State private var openPlan = false
     
-    init(title: String, link: String) {
-        self.title = title
-        self.link = link
+    init(topic: Topic) {
+        self.topic = topic
     }
     
     var body: some View {
-        Text(title)
+        Text("• " + topic.title)
             .onTapGesture {
                 openPlan.toggle()
             }
             .font(.title2)
             .fullScreenCover(isPresented: $openPlan) {
-                ReadyMadePlanDetails(title: title, link: link)
+                ReadyMadePlanDetails(topic: topic)
             }
+    }
+}
+
+struct ListRowModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        Group {
+            content
+            Divider()
+        }.offset(x: 20)
     }
 }
 
@@ -71,40 +310,69 @@ struct ReadyMadePlanDetails: View {
     @Environment(\.presentationMode) var presentationMode
 
     @State private var adviceDetails = [TopicTaskDetails]()
-
-    private let title: String
-    private let link: String
-
-
-    init(title: String, link: String) {
-        self.title = title
-        self.link = link
+    @State private var selection: String = ""
+    
+    private let topic: Topic
+    
+    enum PlanStatus {
+        case added, unloaded, outdated
     }
-
+    
+    @State private var currentStatus: PlanStatus? = nil
+    
+    init(topic: Topic) {
+        self.topic = topic
+    }
+    
     var body: some View {
         VStack{
-            Text(self.title).font(.title2)
-            Spacer()
-            List(adviceDetails, id: \.title) { item in
-                VStack(alignment: .leading) {
-//                    ReadyMadePlan(title: item.title, link: item.title)
-                    ReadyMadeTaskDetails(task: item)
-                }
+            VStack{
+                Text(self.topic.title).font(.system(size: 20))
+                    .fontWeight(.medium)
+                    .multilineTextAlignment(.center).frame(maxWidth: .infinity, alignment: .center)
+                    .padding(15)
+                    .onAppear(perform: loadData)
+                
+                ScrollView {
+                    ForEach(adviceDetails, id: \.title) { item in
+                        ReadyMadeTaskDetails(task: item, isExpanded: self.selection == item.title)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .stroke(Color.yellow, lineWidth: 4)
+                            )
+                            
+                            .cornerRadius(15)
+                            
+                            .padding(1)
+                            .onTapGesture { self.selectDeselect(item) }
+                            .animation(.linear(duration: 0.3))
+                    }
+                }.padding(.horizontal, 15)
             }
-            .onAppear(perform: loadData)
-            
             Spacer()
             HStack {
                 Button(action: {
+                    saveReadyMadePlans()
                     presentationMode.wrappedValue.dismiss()
-                }, label: {
-                    Text("Add to my plans")
-                        .frame(minWidth: 10, idealWidth: 100, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, idealHeight: 10, maxHeight: 20, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                        .padding()
-                        .foregroundColor(Color.white)
-                        .background(Color.blue)
-                        .cornerRadius(40)
-                })
+                }) {
+                    Text(
+                        (self.currentStatus == PlanStatus.unloaded ?
+                            "Add these tips" : (self.currentStatus == PlanStatus.added ?
+                                                    "Delete these tips" : "Update these tips")
+                        )
+                    )
+                    
+                    .frame(minWidth: 10, idealWidth: 100, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, idealHeight: 10, maxHeight: 20, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    .padding()
+                    .foregroundColor(Color.white)
+                    .background(self.currentStatus == PlanStatus.added ? Color.red : Color.blue)
+                    .cornerRadius(40)
+                    .onAppear() {
+                        if (self.currentStatus == nil) {
+                            self.currentStatus = self.getPlanStatus()
+                        }
+                    }
+                }
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }, label: {
@@ -117,11 +385,46 @@ struct ReadyMadePlanDetails: View {
                 })
             }
         }
+    }
+    
+    private func getPlanStatus() -> PlanStatus {
+        let currentVersion = self.getReadyMadePlanVersion()
+        if (currentVersion == nil) {
+            return PlanStatus.unloaded
+        }
+        if (currentVersion == topic.version) {
+            return PlanStatus.added
+        }
+        return PlanStatus.outdated
+    }
+    
+    public func saveReadyMadePlans() {
+        if currentStatus == PlanStatus.added {
+            setReadyMadePlanVersion(link: topic.link, version: nil)
+            return
+        }
+        let userDefaults = UserDefaults.standard
         
+        var newTopics = getTopicsToDownlad()
+        if (!newTopics.contains(topic)) {
+            newTopics.insert(topic)
+            userDefaults.set(try? PropertyListEncoder().encode(newTopics), forKey: "NewTopics")
+        }
+        setReadyMadePlanVersion(link: topic.link, version: topic.version)
+    }
+    
+    private func getReadyMadePlanVersion() -> String? {
+        let userDefaults = UserDefaults.standard
+        let versions = userDefaults.object(forKey: "ReadyMadePlanVersion") as? [String:String] ?? [:]
+        return versions[topic.link]
+    }
+    
+    private func selectDeselect(_ task: TopicTaskDetails) {
+        selection = task.title
     }
     
     func loadData() {
-        guard let url = URL(string: "https://adviser-lilyok.vercel.app/api?topic=" + self.link) else {
+        guard let url = URL(string: "https://adviser-lilyok.vercel.app/api?topic=" + self.topic.link) else {
             print("Invalid URL")
             return
         }
@@ -131,6 +434,9 @@ struct ReadyMadePlanDetails: View {
                 if let decodedResponse = try? JSONDecoder().decode(TopicDetailsResponse.self, from: data) {
                     DispatchQueue.main.async {
                         self.adviceDetails = decodedResponse.data
+                        if (self.adviceDetails.count > 0) {
+                            self.selection = self.adviceDetails[0].title
+                        }
                     }
                     return
                 }
@@ -139,31 +445,40 @@ struct ReadyMadePlanDetails: View {
             
         }.resume()
     }
+    
 }
 
 
 struct ReadyMadeTaskDetails: View {
-    private let task: TopicTaskDetails
-
-    init(task: TopicTaskDetails) {
-        self.task = task
-    }
+    let task: TopicTaskDetails
+    let isExpanded: Bool
+    
     var body: some View {
         VStack {
             Text(task.title)
-                .font(.title3).foregroundColor(.primary)
+                .font(.system(size: 18))
+                .fontWeight(.medium)
+                .padding()
+                .frame(minHeight: 50)
+                .foregroundColor(.black)
                 .multilineTextAlignment(.center).frame(maxWidth: .infinity, alignment: .center)
-            ForEach(task.references.links, id: \.description) { item in
-                Text(item.description).foregroundColor(.primary)
-                if item.link != "" {
-                    Link("Open the resource", destination: URL(string: item.link)!)
-                        .frame( alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                        .padding()
-                        .foregroundColor(Color.white)
-                        .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.red]), startPoint: .leading, endPoint: .trailing))
-                        .cornerRadius(40).buttonStyle(BorderlessButtonStyle())
-                }
-                Spacer()
+                .background(Color.yellow)
+            
+            if isExpanded {
+                ForEach(task.references.links, id: \.description) { item in
+                    Text(item.description).foregroundColor(.primary).font(.system(size: 16))
+                        .fontWeight(.medium)
+                        .multilineTextAlignment(.center).frame(maxWidth: .infinity, alignment: .center)
+                    if item.link != "" {
+                        Link("Open the resource", destination: URL(string: item.link)!)
+                            .frame( alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            .padding()
+                            .foregroundColor(Color.black)
+                            .background(Color.yellow)
+                            .cornerRadius(40).buttonStyle(BorderlessButtonStyle())
+                    }
+                    Divider().background(Color.yellow)
+                }.padding(.horizontal, 7)
             }
         }
     }
@@ -174,4 +489,25 @@ struct Adviser_Previews: PreviewProvider {
     static var previews: some View {
         Adviser()
     }
+}
+
+func getTopicsToDownlad() -> Set<Topic> {
+    if let data = UserDefaults.standard.value(forKey:"NewTopics") as? Data {
+        let curTopics = try? PropertyListDecoder().decode(Set<Topic>.self, from: data)
+        if (curTopics != nil) {
+            return curTopics!
+        }
+    }
+    return Set<Topic>()
+}
+
+func clearTopicsToDownlad(){
+    UserDefaults.standard.set(nil, forKey: "NewTopics")
+}
+
+private func setReadyMadePlanVersion(link: String, version: String?) {
+    let userDefaults = UserDefaults.standard
+    var versions = userDefaults.object(forKey: "ReadyMadePlanVersion") as? [String:String] ?? [:]
+    versions[link] = version
+    userDefaults.set(versions, forKey: "ReadyMadePlanVersion")
 }

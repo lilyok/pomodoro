@@ -9,17 +9,21 @@ import SwiftUI
 
 struct SearchBar: View {
 //    @State var text: String
+    private let gapText: String
     @Binding var text: String
 
     @State private var isEditing = false
         
+    init(gapText: String = "Search ..", text: Binding<String>) {
+        self.gapText = gapText
+        self._text = text
+    }
+
     var body: some View {
         HStack {
-            
-            TextField("Search ...", text: $text)
+            TextField(gapText, text: $text)
                 .padding(7)
                 .padding(.horizontal, 25)
-                .background(Color(.systemGray6))
                 .cornerRadius(8)
                 .overlay(
                     HStack {
@@ -40,7 +44,6 @@ struct SearchBar: View {
                         }
                     }
                 )
-                .padding(.horizontal, 10)
                 .onTapGesture {
                     self.isEditing = true
                 }

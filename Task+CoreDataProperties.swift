@@ -2,7 +2,7 @@
 //  Task+CoreDataProperties.swift
 //  pomodoro
 //
-//  Created by Liliia Ivanova on 23.02.2021.
+//  Created by Liliia Ivanova on 28.04.2021.
 //
 //
 
@@ -16,11 +16,11 @@ extension Task {
         return NSFetchRequest<Task>(entityName: "Task")
     }
 
-    @NSManaged public var timestamp: Date?
-    @NSManaged public var name: String?
     @NSManaged public var completedPomodoros: Int64
-    @NSManaged public var spoiledPomodoros: Int64
     @NSManaged public var isCompleted: Bool
+    @NSManaged public var name: String?
+    @NSManaged public var spoiledPomodoros: Int64
+    @NSManaged public var timestamp: Date?
 
 }
 

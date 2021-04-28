@@ -11,18 +11,31 @@ struct TopicListResponse: Codable {
     var data: [Topic]
 }
 
-struct Topic: Codable {
+struct Topic: Codable, Hashable {
     var title: String
     var link: String
+    var version: String
+    
+    static func == (lhs: Topic, rhs: Topic) -> Bool {
+        return lhs.link == rhs.link
+    }
 }
 
 struct TopicDetailsResponse: Codable {
     var data: [TopicTaskDetails]
 }
 
-struct TopicTaskDetails: Codable {
+struct TopicTaskDetails: Codable, Hashable {
     var title: String
     var references: TopicReferences
+    
+    static func == (lhs: TopicTaskDetails, rhs: TopicTaskDetails) -> Bool {
+        return lhs.title == rhs.title
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(title)
+    }
 }
 
 struct TopicReferences: Codable {

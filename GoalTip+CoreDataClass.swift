@@ -1,5 +1,5 @@
 //
-//  Task+CoreDataClass.swift
+//  GoalTip+CoreDataClass.swift
 //  pomodoro
 //
 //  Created by Liliia Ivanova on 28.04.2021.
@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-@objc(Task)
-public class Task: NSManagedObject {
+@objc(GoalTip)
+public class GoalTip: Task {
 
 }

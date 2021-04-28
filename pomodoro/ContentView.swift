@@ -20,7 +20,8 @@ struct ContentView: View {
         animation: .default)
     private var tasks: FetchedResults<Task>
     private var settings: PomodoroSettings
-    
+
+    @State private var searchTask = ""
     @State private var openSettings = false
     
     init() {
@@ -42,20 +43,26 @@ struct ContentView: View {
         TabView {
             // TODO adviser
             Adviser()
-            .tabItem {
+                .tabItem {
                     Image(systemName: "doc.text.magnifyingglass")
-                    Text("Tasks Presets")
-            }
+                    Text("Task Adviser")
+                }
             NavigationView {
-                List {
-                    ForEach(tasks) { task in
-                        TaskView(task: task, settings: settings)
-                    }
-                    .onDelete(perform: deleteTasks)
-                    .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                        saveData()
+                VStack(alignment: .leading) {
+                    SearchBar(gapText: "Search a task...", text: $searchTask).padding(.top, 4)
+                    List {
+                        ForEach(tasks.filter({searchTask.isEmpty ? true : (($0.name ?? "_New task_") == "_New task_" ? "                      " : $0.name! ).lowercased().contains(searchTask.lowercased())})) { task in
+                            VStack(alignment: .leading) {
+                                TaskView(task: task, settings: settings)
+                            }
+                        }
+                        .onDelete(perform: deleteTasks)
+                        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+                            saveData()
+                        }
                     }
                 }
+                .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {
