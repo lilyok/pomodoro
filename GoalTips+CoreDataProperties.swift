@@ -2,7 +2,7 @@
 //  GoalTips+CoreDataProperties.swift
 //  pomodoro
 //
-//  Created by Liliia Ivanova on 28.04.2021.
+//  Created by Liliia Ivanova on 29.04.2021.
 //
 //
 
@@ -16,8 +16,9 @@ extension GoalTips {
         return NSFetchRequest<GoalTips>(entityName: "GoalTips")
     }
 
-    @NSManaged public var title: String?
     @NSManaged public var link: String?
+    @NSManaged public var title: String?
+    @NSManaged public var version: String?
     @NSManaged public var goalTips: NSSet?
 
 }

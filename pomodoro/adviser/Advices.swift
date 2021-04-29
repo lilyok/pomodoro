@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+let ENVNAME: String = "TEST"  // "PROD"
+let LINK: [String: String] = ["TEST": "http://127.0.0.1:5000/api", "PROD":  "https://adviser-lilyok.vercel.app/api"]
 
 struct TipList: View {
     let title: String
@@ -171,21 +173,42 @@ struct Adviser: View {
     }
     
     func loadAdvices() {
+        self.isLoading = true
+
         let linkToDownload = getTopicsToDownlad()
-        self.summaryCount = self.plans.count + linkToDownload.count
-        
+        let versions = getAllReadyMadePlanVersions()
+
+        self.summaryCount = versions.count
+
+        var indexesToDelete: [Int] = []
+        for (index, el) in self.plans.enumerated() {
+            let key: String = el.link!
+            if (versions.keys.contains(key) == false) {
+                indexesToDelete.append(index)
+                continue
+            }
+            if (versions[key] != el.version) {
+                self.loadData(link: el.link!, title: el.title!, version: versions[key]!, update: true, elToUpdate: el)
+            }
+        }
+
+        for index in indexesToDelete {
+            viewContext.delete(self.plans[index])
+        }
+
         if (linkToDownload.count == 0) {
             return
         }
-        self.isLoading = true
+
         for el in linkToDownload {
-            self.loadData(title: el.title, link: el.link)
+            self.loadData(link: el.link, title: el.title, version: el.version)
         }
+
         clearTopicsToDownlad()
     }
     
-    func loadData(title: String, link: String) {
-        guard let url = URL(string: "https://adviser-lilyok.vercel.app/api?topic=" + link) else {
+    func loadData(link: String, title: String, version: String, update: Bool = false, elToUpdate: GoalTips? = nil) {
+        guard let url = URL(string: LINK[ENVNAME]! + "?topic=" + link) else {
             print("Invalid URL")
             return
         }
@@ -195,7 +218,11 @@ struct Adviser: View {
                 if let decodedResponse = try? JSONDecoder().decode(TopicDetailsResponse.self, from: data) {
                     DispatchQueue.main.async {
                         let adviceDetails = decodedResponse.data
-                        addTask(title: title, link: link, adviceDetails: adviceDetails)
+                        if update {
+                            updateTask(link: link, title: title, version: version, adviceDetails: adviceDetails, elToUpdate: elToUpdate!)
+                        } else {
+                            addTask(link: link, title: title, version: version, adviceDetails: adviceDetails)
+                        }
                     }
                     return
                 }
@@ -205,11 +232,46 @@ struct Adviser: View {
         }.resume()
     }
     
-    func addTask(title:String, link: String, adviceDetails: [TopicTaskDetails]) {
+    func updateTask(link: String, title: String, version: String, adviceDetails: [TopicTaskDetails], elToUpdate: GoalTips) {
+        elToUpdate.title = title
+        elToUpdate.link = link
+        elToUpdate.version = version
+        
+        var nameToGoalTip = [String : GoalTip]()
+        for goalTip in elToUpdate.goalTips?.allObjects as? [GoalTip] ?? [] {
+            nameToGoalTip[goalTip.name!] = goalTip
+        }
+        elToUpdate.goalTips = nil
+//        print(nameToGoalTip)
+        
+        for tip in adviceDetails {
+            let goalTip = GoalTip(context: viewContext)
+            goalTip.name = tip.title
+            goalTip.timestamp = nameToGoalTip[tip.title]?.timestamp
+            goalTip.spoiledPomodoros = nameToGoalTip[tip.title]?.spoiledPomodoros ?? 0
+            goalTip.completedPomodoros = nameToGoalTip[tip.title]?.completedPomodoros ?? 0
+            goalTip.isCompleted = nameToGoalTip[tip.title]?.isCompleted ?? false
+            
+            for link in tip.references.links {
+                let tipLink = TipLink(context: viewContext)
+                tipLink.link = link.link
+                tipLink.text = link.description
+                tipLink.tip = goalTip
+            }
+            
+            goalTip.goal = elToUpdate
+        }
+        self.saveData()
+
+        
+    }
+
+    func addTask(link: String, title: String, version: String, adviceDetails: [TopicTaskDetails]) {
         withAnimation {
             let newPlan = GoalTips(context: viewContext)
             newPlan.title = title
             newPlan.link = link
+            newPlan.version = version
             
             for tip in adviceDetails {
                 let goalTip = GoalTip(context: viewContext)
@@ -256,7 +318,7 @@ struct AdviceSearcher: View {
     }
     
     func loadData() {
-        guard let url = URL(string: "https://adviser-lilyok.vercel.app/api") else {
+        guard let url = URL(string: LINK[ENVNAME]!) else {
             print("Invalid URL")
             return
         }
@@ -400,15 +462,17 @@ struct ReadyMadePlanDetails: View {
     
     public func saveReadyMadePlans() {
         if currentStatus == PlanStatus.added {
-            setReadyMadePlanVersion(link: topic.link, version: nil)
+            setReadyMadePlanVersion(version: nil, topic: topic)
             return
         }
         let userDefaults = UserDefaults.standard
         
-        var newTopics = getTopicsToDownlad()
-        if (!newTopics.contains(topic)) {
-            newTopics.insert(topic)
-            userDefaults.set(try? PropertyListEncoder().encode(newTopics), forKey: "NewTopics")
+        if currentStatus == PlanStatus.unloaded {
+            var newTopics = getTopicsToDownlad()
+            if (!newTopics.contains(topic)) {
+                newTopics.insert(topic)
+                userDefaults.set(try? PropertyListEncoder().encode(newTopics), forKey: "NewTopics")
+            }
         }
         setReadyMadePlanVersion(link: topic.link, version: topic.version)
     }
@@ -424,7 +488,7 @@ struct ReadyMadePlanDetails: View {
     }
     
     func loadData() {
-        guard let url = URL(string: "https://adviser-lilyok.vercel.app/api?topic=" + self.topic.link) else {
+        guard let url = URL(string: LINK[ENVNAME]! + "?topic=" + self.topic.link) else {
             print("Invalid URL")
             return
         }
@@ -505,9 +569,27 @@ func clearTopicsToDownlad(){
     UserDefaults.standard.set(nil, forKey: "NewTopics")
 }
 
-private func setReadyMadePlanVersion(link: String, version: String?) {
+private func getAllReadyMadePlanVersions() -> [String:String] {
+    let userDefaults = UserDefaults.standard
+    let versions = userDefaults.object(forKey: "ReadyMadePlanVersion") as? [String:String] ?? [:]
+    return versions
+}
+
+
+private func setReadyMadePlanVersion(link: String? = nil, version: String? = nil, topic: Topic? = nil) {
     let userDefaults = UserDefaults.standard
     var versions = userDefaults.object(forKey: "ReadyMadePlanVersion") as? [String:String] ?? [:]
-    versions[link] = version
+    versions[topic == nil ? link! : topic?.link ?? ""] = version
     userDefaults.set(versions, forKey: "ReadyMadePlanVersion")
+    if (topic == nil) {
+        return
+    }
+    // topic is nessesary for case when user added and immediately deleted a plan
+    if let data = UserDefaults.standard.value(forKey:"NewTopics") as? Data {
+        var curTopics = try? PropertyListDecoder().decode(Set<Topic>.self, from: data)
+        if (curTopics != nil) {
+            curTopics!.remove(topic!)
+        }
+        UserDefaults.standard.set(try? PropertyListEncoder().encode(curTopics), forKey: "NewTopics")
+    }
 }
