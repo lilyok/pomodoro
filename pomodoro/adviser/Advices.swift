@@ -10,6 +10,78 @@ import SwiftUI
 let ENVNAME: String = "TEST"  // "PROD"
 let LINK: [String: String] = ["TEST": "http://127.0.0.1:5000/api", "PROD":  "https://adviser-lilyok.vercel.app/api"]
 
+
+func isTaskRunning(name: String?, timestamp: Date?) -> Bool { // TODO to common code
+    let TasksStatus = UserDefaults.standard.object(forKey: "TaskSettings") as? [String:Bool] ?? [:]
+    let key = "\(name ?? "")_\(timestamp ?? Date())"
+    return TasksStatus[key] != nil ? TasksStatus[key]! : false
+}
+
+struct PomodoroButtons: View { // TODO to common code
+    let task: Task
+    let isColored: Bool
+
+    @Binding var completeTask: Bool
+    @Binding var runTask: Bool
+    @Binding var isNewTimer: Bool
+
+    var body: some View {
+        HStack {
+            if !completeTask && !task.isCompleted {
+                Button(action: {
+                    isNewTimer = true
+                    runTask.toggle()
+                }) {
+                    Text("Run")
+                        .frame(minWidth: 10, idealWidth: 50, maxWidth: .infinity, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                        .padding()
+                        .foregroundColor(Color.white)
+                        .background(
+                            isColored ?
+                            LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing) :
+                            LinearGradient(gradient: Gradient(colors: [Color.black, Color.black]), startPoint: .leading, endPoint: .trailing)
+                        )
+                        .cornerRadius(40)
+                }
+                .buttonStyle(BorderlessButtonStyle())
+                
+                Spacer()
+                Button(action: {
+                    withAnimation {
+                        runTask = false
+                        task.isCompleted = true
+                        completeTask.toggle()
+                    }
+                }) {
+                    Text("Complete")
+                        .frame(minWidth: 10, idealWidth: 50, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                        .padding()
+                        .foregroundColor(Color.white)
+                        .background(
+                            isColored ?
+                            LinearGradient(gradient: Gradient(colors: [Color.purple, Color.red]), startPoint: .leading, endPoint: .trailing) :
+                            LinearGradient(gradient: Gradient(colors: [Color.black, Color.black]), startPoint: .leading, endPoint: .trailing)
+                        )
+                        .cornerRadius(40)
+                }
+                .buttonStyle(BorderlessButtonStyle())
+            } else {
+                Spacer()
+                Button(action: {
+                    withAnimation {
+                        task.isCompleted = false
+                        completeTask.toggle()
+                    }
+                }) {
+                    Text("COMPLETED").frame(minWidth: 10, idealWidth: 50, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, idealHeight: 10, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                        .padding()
+                        .foregroundColor(Color.white)
+                }
+            }
+        }
+    }
+}
+
 struct TipList: View {
     let title: String
     let plan: [GoalTip]
@@ -17,6 +89,10 @@ struct TipList: View {
 
     @State private var isExpanded: Bool = false
     @State private var selection: String = ""
+    
+    @State private var completeTask = false
+    @State private var runTask = false
+    @State private var isNewTimer = false;
     
     private func selectDeselect(_ title: String) {
         if (selection == title) {
@@ -41,7 +117,9 @@ struct TipList: View {
                         .foregroundColor(.black).background(Color.yellow).cornerRadius(15)
                         if (isExpanded) {
                             ScrollView {
-                                ForEach(plan) { item in
+                                ForEach(plan.sorted {
+                                    !$0.isCompleted || $0.timestamp! < $1.timestamp!
+                                }) { item in
                                     TipDetails(task: item, isExpanded: self.selection == item.name)
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 15)
@@ -60,6 +138,13 @@ struct TipList: View {
                         RoundedRectangle(cornerRadius: 15)
                             .stroke(Color.yellow, lineWidth: 4)
                     )
+            }.onAppear(){
+                for item in plan {
+                    if isTaskRunning(name: item.name, timestamp: item.timestamp) {
+                        isExpanded = true
+                        break
+                    }
+                }
             }
         }
     }
@@ -68,18 +153,23 @@ struct TipList: View {
 struct TipDetails: View {
     let task: GoalTip
     let isExpanded: Bool
-    
+
+    @State private var completeTask: Bool = false
+    @State private var runTask: Bool = false
+    @State private var isNewTimer: Bool = true  // TODO??????
+
+    let timer = Timer.publish(every: 0, on: .main, in: .common).autoconnect()
+
     var body: some View {
         VStack {
-            Text(task.name ?? "")
+            
+            Label(task.name ?? "", systemImage: "list.triangle")
                 .font(.system(size: 18))
-                .fontWeight(.medium)
                 .padding()
                 .frame(minHeight: 50)
                 .foregroundColor(.black)
                 .multilineTextAlignment(.center).frame(maxWidth: .infinity, alignment: .center)
                 .background(Color.yellow)
-            
             if isExpanded {
                 ForEach((task.links?.allObjects as? [TipLink] ?? [])) { item in
                     Text(item.text!).foregroundColor(.primary).font(.system(size: 16))
@@ -96,6 +186,25 @@ struct TipDetails: View {
                     Divider().background(Color.yellow)
                 }.padding(.horizontal, 7)
             }
+            PomodoroButtons(task: task, isColored: false, completeTask: $completeTask, runTask: $runTask, isNewTimer: $isNewTimer).padding(2).background(Color.yellow)
+
+        }.fullScreenCover(isPresented: $runTask) {
+            CurrentTaskView(task: task, settings: PomodoroSettings.loadPomodoroSettings(), isNewTimer: isNewTimer)
+        }.background((!completeTask && !task.isCompleted) ? Color.clear: Color.yellow)
+        .opacity((!completeTask && !task.isCompleted) ? 1.0: 0.8).cornerRadius(5)
+        .onReceive(timer) { _ in
+//            if !isNewTimer {
+//                let TasksStatus = UserDefaults.standard.object(forKey: "TaskSettings") as? [String:Bool] ?? [:]
+//                let key = "\(task.name ?? "")_\(task.timestamp ?? Date())"
+//                self.runTask = TasksStatus[key] != nil ? TasksStatus[key]! : false
+//            if !isNewTimer {
+                self.runTask = isTaskRunning(name: task.name, timestamp: task.timestamp)
+//            }
+            isNewTimer = false
+            timer.upstream.connect().cancel()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+            isNewTimer = false
         }
     }
 }
@@ -113,7 +222,7 @@ struct Adviser: View {
     @State private var isLoading = false
     @State private var summaryCount = 0
     
-    var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
         NavigationView {
@@ -174,6 +283,7 @@ struct Adviser: View {
     
     func loadAdvices() {
         self.isLoading = true
+        timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
         let linkToDownload = getTopicsToDownlad()
         let versions = getAllReadyMadePlanVersions()
@@ -242,7 +352,6 @@ struct Adviser: View {
             nameToGoalTip[goalTip.name!] = goalTip
         }
         elToUpdate.goalTips = nil
-//        print(nameToGoalTip)
         
         for tip in adviceDetails {
             let goalTip = GoalTip(context: viewContext)
@@ -268,6 +377,7 @@ struct Adviser: View {
 
     func addTask(link: String, title: String, version: String, adviceDetails: [TopicTaskDetails]) {
         withAnimation {
+            PomodoroTimer.allowNotifications()
             let newPlan = GoalTips(context: viewContext)
             newPlan.title = title
             newPlan.link = link

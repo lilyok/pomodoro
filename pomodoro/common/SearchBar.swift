@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SearchBar: View {
-//    @State var text: String
     private let gapText: String
     @Binding var text: String
 
