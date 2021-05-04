@@ -5,6 +5,8 @@
 //  Created by Liliia Ivanova on 03.03.2021.
 //
 
+import SwiftUI
+
 struct TimerType {
     static let pomodoro = "pomodoro"
     static let shortBreak = "short break"
@@ -30,3 +32,10 @@ func secondsToHoursMinutesSeconds (seconds : Int) -> String {
     }
     return result
 }
+
+func isTaskRunning(name: String?, timestamp: Date?) -> Bool {
+    let TasksStatus = UserDefaults.standard.object(forKey: "TaskSettings") as? [String:Bool] ?? [:]
+    let key = "\(name ?? "")_\(timestamp ?? Date())"
+    return TasksStatus[key] != nil ? TasksStatus[key]! : false
+}
+

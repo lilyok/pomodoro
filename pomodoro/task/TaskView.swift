@@ -20,44 +20,7 @@ struct TaskView: View {
     var body: some View {
         VStack(alignment: .leading) {
             TaskDetails(task: task)
-            HStack {
-                if !completeTask && !task.isCompleted {
-                    Button(action: {
-                        isNewTimer = true
-                        runTask.toggle()
-                    }) {
-                        Text("Run")
-                            .frame(minWidth: 10, idealWidth: 100, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, idealHeight: 10, maxHeight: .infinity, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            .padding()
-                            .foregroundColor(Color.white)
-                            .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
-                            .cornerRadius(40)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                    
-                    Spacer()
-                    Button(action: {
-                        withAnimation {
-                            runTask = false
-                            task.isCompleted = true
-                            completeTask.toggle()
-                        }
-                    }) {
-                        Text("Complete")
-                            .frame(minWidth: 10, idealWidth: 100, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, idealHeight: 10, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            .padding()
-                            .foregroundColor(Color.white)
-                            .background(LinearGradient(gradient: Gradient(colors: [Color.purple, Color.red]), startPoint: .leading, endPoint: .trailing))
-                            .cornerRadius(40)
-                    }
-                    .buttonStyle(BorderlessButtonStyle())
-                } else {
-                    Spacer()
-                    Text("COMPLETED").frame(minWidth: 10, idealWidth: 100, maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, minHeight: /*@START_MENU_TOKEN@*/0/*@END_MENU_TOKEN@*/, idealHeight: 10, maxHeight: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                        .padding()
-                        .foregroundColor(Color.white)
-                }
-            }
+            PomodoroButtons(task: task, isColored: true, completeTask: $completeTask, runTask: $runTask, isNewTimer: $isNewTimer).padding(2)
         }.fullScreenCover(isPresented: $runTask) {
             CurrentTaskView(task: task, settings: settings, isNewTimer: isNewTimer)
         }.background((!completeTask && !task.isCompleted) ?
@@ -66,9 +29,7 @@ struct TaskView: View {
         .opacity((!completeTask && !task.isCompleted) ? 1.0: 0.8).cornerRadius(5)
         .onReceive(timer) { _ in
             if !isNewTimer {
-                let TasksStatus = UserDefaults.standard.object(forKey: "TaskSettings") as? [String:Bool] ?? [:]
-                let key = "\(task.name ?? "")_\(task.timestamp ?? Date())"
-                self.runTask = TasksStatus[key] != nil ? TasksStatus[key]! : false
+                self.runTask = isTaskRunning(name: task.name, timestamp: task.timestamp)
             }
             isNewTimer = false
             timer.upstream.connect().cancel()
