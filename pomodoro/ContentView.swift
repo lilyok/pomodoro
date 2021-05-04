@@ -11,21 +11,24 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    
-    @FetchRequest(
-        sortDescriptors: [
-            NSSortDescriptor(keyPath: \Task.isCompleted, ascending: true),
-            NSSortDescriptor(keyPath: \Task.timestamp, ascending: false),
-        ],
-        animation: .default)
-    private var tasks: FetchedResults<Task>
+
     private var settings: PomodoroSettings
 
     @State private var searchTask = ""
     @State private var openSettings = false
     
+    @FetchRequest
+    private var tasks: FetchedResults<Task>
+
     init() {
         self.settings = PomodoroSettings.loadPomodoroSettings()
+        let request: NSFetchRequest<Task> = Task.fetchRequest()
+        request.sortDescriptors = [
+            NSSortDescriptor(keyPath: \Task.isCompleted, ascending: true),
+            NSSortDescriptor(keyPath: \Task.timestamp, ascending: false),
+        ]
+        request.includesSubentities = false
+        _tasks = FetchRequest(fetchRequest: request)
     }
     
     func saveData() {
@@ -41,12 +44,6 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            // TODO adviser
-            Adviser()
-                .tabItem {
-                    Image(systemName: "doc.text.magnifyingglass")
-                    Text("Task Adviser")
-                }
             NavigationView {
                 VStack(alignment: .leading) {
                     SearchBar(gapText: "Search a task...", text: $searchTask).padding(.top, 4)
@@ -70,7 +67,8 @@ struct ContentView: View {
                             
                         }) {
                             Label("Settings", systemImage: "gearshape")
-                        }.fullScreenCover(isPresented: $openSettings) {
+                        }.disabled(searchTask != "")
+                        .fullScreenCover(isPresented: $openSettings) {
                             SettingsView(settings: settings).onDisappear(){
                                 self.settings.savePomodoroSettings()
                             }
@@ -80,7 +78,7 @@ struct ContentView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: addTask) {
                             Label("Add Item", systemImage: "plus")
-                        }
+                        }.disabled(searchTask != "")
                     }
                 }
             }
@@ -104,6 +102,11 @@ struct ContentView: View {
                 Image(systemName: "chart.bar")
                 Text("Statistics")
             }
+            Adviser()
+                .tabItem {
+                    Image(systemName: "doc.text.magnifyingglass")
+                    Text("Task Adviser")
+                }
         }
     }
     
