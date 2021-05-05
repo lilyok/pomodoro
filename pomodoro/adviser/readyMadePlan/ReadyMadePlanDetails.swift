@@ -96,7 +96,7 @@ struct ReadyMadePlanDetails: View {
     }
     
     private func selectDeselect(_ task: TopicTaskDetails) {
-        selection = task.title
+        selection = selection == task.title ? "" : task.title
     }
     
     func loadData() {

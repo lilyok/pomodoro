@@ -21,6 +21,7 @@ struct TipDetails: View {
         VStack {
             // DO NOT DELETE isNewTimer from the line below
             Label(isNewTimer ? task.name ?? "" : task.name ?? "", systemImage: "list.triangle") // DO NOT DELETE isNewTimer
+                .fixedSize(horizontal: false, vertical:true)
                 .font(.system(size: 18))
                 .padding()
                 .frame(minHeight: 50)
@@ -29,9 +30,9 @@ struct TipDetails: View {
                 .background(Color.yellow)
             if isExpanded {
                 ForEach((task.links?.allObjects as? [TipLink] ?? [])) { item in
-                    Text(item.text!).foregroundColor(.primary).font(.system(size: 16))
-                        .fontWeight(.medium)
-                        .multilineTextAlignment(.center).frame(maxWidth: .infinity, alignment: .center)
+                    Text(item.text!)
+                        .fixedSize(horizontal: false, vertical:true).foregroundColor(.primary)
+                        .font(.system(size: 16)).multilineTextAlignment(.center).frame(maxWidth: .infinity, alignment: .center)
                     if item.link != "" {
                         Link("Open the resource", destination: URL(string: item.link!)!)
                             .frame( alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)

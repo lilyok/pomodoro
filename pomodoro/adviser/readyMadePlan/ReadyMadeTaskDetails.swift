@@ -13,9 +13,9 @@ struct ReadyMadeTaskDetails: View {
     
     var body: some View {
         VStack {
-            Text(task.title)
+            Label(task.title, systemImage: "list.triangle")
+                .fixedSize(horizontal: false, vertical:true)
                 .font(.system(size: 18))
-                .fontWeight(.medium)
                 .padding()
                 .frame(minHeight: 50)
                 .foregroundColor(.black)
@@ -24,8 +24,9 @@ struct ReadyMadeTaskDetails: View {
             
             if isExpanded {
                 ForEach(task.references.links, id: \.description) { item in
-                    Text(item.description).foregroundColor(.primary).font(.system(size: 16))
-                        .fontWeight(.medium)
+                    Text(item.description)
+                        .fixedSize(horizontal: false, vertical:true)
+                        .foregroundColor(.primary).font(.system(size: 16))
                         .multilineTextAlignment(.center).frame(maxWidth: .infinity, alignment: .center)
                     if item.link != "" {
                         Link("Open the resource", destination: URL(string: item.link)!)
