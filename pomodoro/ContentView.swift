@@ -16,6 +16,7 @@ struct ContentView: View {
 
     @State private var searchTask = ""
     @State private var openSettings = false
+    @State private var tabSelection = 0
     
     @FetchRequest
     private var tasks: FetchedResults<Task>
@@ -43,7 +44,7 @@ struct ContentView: View {
     }
     
     var body: some View {
-        TabView {
+        TabView(selection: $tabSelection) {
             NavigationView {
                 VStack(alignment: .leading) {
                     SearchBar(gapText: "Search a task...", text: $searchTask).padding(.top, 4)
@@ -86,6 +87,7 @@ struct ContentView: View {
                 Image(systemName: "timer")
                 Text("Pomodoro")
             }
+            .tag(0)
             NavigationView {
                 ChartsView()
                     .toolbar {
@@ -102,11 +104,26 @@ struct ContentView: View {
                 Image(systemName: "chart.bar")
                 Text("Statistics")
             }
+            .tag(1)
             Adviser()
-                .tabItem {
-                    Image(systemName: "doc.text.magnifyingglass")
-                    Text("Task Adviser")
+            .tabItem {
+                Image(systemName: "doc.text.magnifyingglass")
+                Text("Task Adviser")
+            }
+            .tag(2)
+        }.onAppear() {
+            let runningTaskName = getRunningTaskName()
+            var isTask = false
+            for task in tasks {
+                if ("\(task.name ?? "")_\(task.timestamp ?? Date())" == runningTaskName) {
+                    isTask = true
+                    break
                 }
+            }
+            if !isTask {
+                tabSelection = 2
+                print(tabSelection)
+            }
         }
     }
     

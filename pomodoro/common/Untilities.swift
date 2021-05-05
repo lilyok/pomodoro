@@ -39,3 +39,16 @@ func isTaskRunning(name: String?, timestamp: Date?) -> Bool {
     return TasksStatus[key] != nil ? TasksStatus[key]! : false
 }
 
+func getRunningTaskName() -> String? {
+    let TasksStatus = UserDefaults.standard.object(forKey: "TaskSettings") as? [String:Bool] ?? [:]
+    if TasksStatus.isEmpty {
+        return nil
+    }
+    for (name, status) in TasksStatus {
+        if status {
+            return name
+        }
+        
+    }
+    return nil
+}
