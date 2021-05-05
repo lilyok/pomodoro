@@ -113,16 +113,17 @@ struct ContentView: View {
             .tag(2)
         }.onAppear() {
             let runningTaskName = getRunningTaskName()
-            var isTask = false
-            for task in tasks {
-                if ("\(task.name ?? "")_\(task.timestamp ?? Date())" == runningTaskName) {
-                    isTask = true
-                    break
+            if (runningTaskName != nil) {
+                var isTask = false
+                for task in tasks {
+                    if ("\(task.name ?? "")_\(task.timestamp ?? Date())" == runningTaskName) {
+                        isTask = true
+                        break
+                    }
                 }
-            }
-            if !isTask {
-                tabSelection = 2
-                print(tabSelection)
+                if !isTask {
+                    tabSelection = 2
+                }
             }
         }
     }
