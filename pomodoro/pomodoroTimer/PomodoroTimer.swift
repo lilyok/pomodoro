@@ -154,6 +154,7 @@ class PomodoroTimer {
         UserDefaults.standard.removeObject(forKey: "lastNotificationDate")
         UserDefaults.standard.removeObject(forKey: "lastNotificationIndex")
         UserDefaults.standard.removeObject(forKey: "plannedNumber")
+        UserDefaults.standard.removeObject(forKey: "TaskSettings")
 
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
 
