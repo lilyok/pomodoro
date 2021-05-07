@@ -19,7 +19,9 @@ class PomodoroTimer {
         self.taskId = taskId
         self.settings = settings
         self.timeRemaining = settings.pomodoroTime * 60
-        if isNewTimer {
+        let plannedNumber = UserDefaults.standard.value(forKey:"plannedNumber") as? Int ?? 0
+
+        if isNewTimer && plannedNumber == 0 {
             self.setAllNotifications(maxNumber: PomodoroSettings.maxNotificatiosNumber / settings.sessionsNumberBeforeLongBreak / 2)
         } else {
             self.timeRemaining = getTimeRemaining()
@@ -41,24 +43,31 @@ class PomodoroTimer {
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
 
-        UNUserNotificationCenter.current().add(request)
+        UNUserNotificationCenter.current().add(request){ (error : Error?) in
+            if let theError = error {
+                print(theError.localizedDescription)
+            }
+            let userDefaults = UserDefaults.standard
+            let plannedNumber = UserDefaults.standard.value(forKey:"plannedNumber") as? Int ?? 0
+            if (plannedNumber > 0) {
+                userDefaults.set(plannedNumber - 1, forKey: "plannedNumber")
+            }
+        }
         return currentDate
     }
     
     private func setAllNotifications(maxNumber: Int, isAdditionalRequests: Bool = false) {
-        let userDefaults = UserDefaults.standard
-        userDefaults.set(false, forKey: "firstSetOfNotificationsComplete")
-
         if !isAdditionalRequests {
             clearAll()
         }
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(maxNumber * 2 * settings.sessionsNumberBeforeLongBreak, forKey: "plannedNumber")
         let initDate = userDefaults.object(forKey: "lastNotificationDate") as? Date ?? nil
         let initIndex = userDefaults.object(forKey: "lastNotificationIndex") as? Int ?? nil
 
         var currentDate = initDate != nil ? initDate! : Date()
         var currentIndex = initIndex != nil ? initIndex! : 1000
 
-        
         var curIndex = 0
         for _ in 1...maxNumber{
             for i in 1...settings.sessionsNumberBeforeLongBreak {
@@ -70,7 +79,6 @@ class PomodoroTimer {
         currentIndex += curIndex
         userDefaults.set(currentDate, forKey: "lastNotificationDate")
         userDefaults.set(currentIndex, forKey: "lastNotificationIndex")
-        userDefaults.set(true, forKey: "firstSetOfNotificationsComplete")
     }
 
     public static func allowNotifications() {
@@ -113,7 +121,9 @@ class PomodoroTimer {
         let center = UNUserNotificationCenter.current()
         center.getPendingNotificationRequests(completionHandler: { requests in
             let freeSessionsCount = (PomodoroSettings.maxNotificatiosNumber - requests.count) / self.settings.sessionsNumberBeforeLongBreak / 2
-            if self.isRun && freeSessionsCount > 0 && UserDefaults.standard.object(forKey: "firstSetOfNotificationsComplete") as? Bool ?? false {
+            let plannedNumber = UserDefaults.standard.value(forKey:"plannedNumber") as? Int ?? 0
+            
+            if self.isRun && freeSessionsCount > 0 && plannedNumber == 0 {
                 self.setAllNotifications(maxNumber: freeSessionsCount, isAdditionalRequests: true)
             }
             for request in requests.sorted(by: { $0.identifier < $1.identifier } ) {
@@ -132,7 +142,7 @@ class PomodoroTimer {
                 if (diffs.year ?? 0 > 0 || diffs.month ?? 0 > 0 || diffs.day ?? 0 > 0 || (summary > Int(self.getTimeByType(timerType: self.timerType)))) {
                     continue
                 } else {
-                    self.timeRemaining  = summary
+                    self.timeRemaining = summary
                     return
                 }
             }
@@ -143,7 +153,7 @@ class PomodoroTimer {
     private func clearAll() {
         UserDefaults.standard.removeObject(forKey: "lastNotificationDate")
         UserDefaults.standard.removeObject(forKey: "lastNotificationIndex")
-        UserDefaults.standard.removeObject(forKey: "firstSetOfNotificationsComplete")
+        UserDefaults.standard.removeObject(forKey: "plannedNumber")
 
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
 
@@ -152,6 +162,8 @@ class PomodoroTimer {
         clearAll()
         self.isRun = false
         saveTaskSettings()
+        let userDefaults = UserDefaults.standard
+        userDefaults.set(1, forKey: "plannedNumber")
         _ = createNotification(index: 0, timerType: "", currentDate: Date(), isBreak: true)
     }
     
@@ -161,4 +173,9 @@ class PomodoroTimer {
         settings[taskId] = isRun
         userDefaults.set(settings, forKey: "TaskSettings")
     }
+
+//    private func tmpPrint() {
+//        let plannedNumber = UserDefaults.standard.value(forKey:"plannedNumber") as? Int ?? 0
+//        print("plannedNumber", plannedNumber)
+//    }
 }

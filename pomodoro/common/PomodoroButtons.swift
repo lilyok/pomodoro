@@ -20,8 +20,10 @@ struct PomodoroButtons: View {
         HStack {
             if !completeTask && !task.isCompleted {
                 Button(action: {
-                    isNewTimer = true
-                    runTask.toggle()
+                    DispatchQueue.main.async {
+                        isNewTimer = true
+                        runTask.toggle()
+                    }
                 }) {
                     Text("Run")
                         .frame(minWidth: 10, idealWidth: 50, maxWidth: .infinity, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
