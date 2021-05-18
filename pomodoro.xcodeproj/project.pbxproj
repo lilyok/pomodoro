@@ -15,6 +15,7 @@
 		26187B54263977FD00C8AA97 /* GoalTips+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26187B4C263977FD00C8AA97 /* GoalTips+CoreDataProperties.swift */; };
 		26187B55263977FD00C8AA97 /* GoalTip+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26187B4D263977FD00C8AA97 /* GoalTip+CoreDataClass.swift */; };
 		26187B56263977FD00C8AA97 /* GoalTip+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26187B4E263977FD00C8AA97 /* GoalTip+CoreDataProperties.swift */; };
+		2694D8C226543A530046B0D9 /* QuoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2694D8C126543A530046B0D9 /* QuoteView.swift */; };
 		26A680C22607AD9A0085B0C2 /* PomodoroStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26A680C12607AD9A0085B0C2 /* PomodoroStatistics.swift */; };
 		26AF75EB25E0501D00BA2776 /* pomodoroApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AF75EA25E0501D00BA2776 /* pomodoroApp.swift */; };
 		26AF75ED25E0501D00BA2776 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26AF75EC25E0501D00BA2776 /* ContentView.swift */; };
@@ -70,6 +71,7 @@
 		26187B4C263977FD00C8AA97 /* GoalTips+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoalTips+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		26187B4D263977FD00C8AA97 /* GoalTip+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoalTip+CoreDataClass.swift"; sourceTree = "<group>"; };
 		26187B4E263977FD00C8AA97 /* GoalTip+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GoalTip+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		2694D8C126543A530046B0D9 /* QuoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteView.swift; sourceTree = "<group>"; };
 		26A680C12607AD9A0085B0C2 /* PomodoroStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroStatistics.swift; sourceTree = "<group>"; };
 		26AF75E725E0501D00BA2776 /* pomodoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = pomodoro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26AF75EA25E0501D00BA2776 /* pomodoroApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pomodoroApp.swift; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 				26E55995263098C800B2972E /* SearchBar.swift */,
 				26D2139D25EFDF1A00257AED /* Untilities.swift */,
 				26DA9A5226419A9D0087DF1F /* PomodoroButtons.swift */,
+				2694D8C126543A530046B0D9 /* QuoteView.swift */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -421,6 +424,7 @@
 				26DA9A5726419BDE0087DF1F /* ReadyMadePlan.swift in Sources */,
 				26B006C72601189500A99086 /* BarView.swift in Sources */,
 				26D2139925EFDE1F00257AED /* PomodoroTimer.swift in Sources */,
+				2694D8C226543A530046B0D9 /* QuoteView.swift in Sources */,
 				26187B53263977FD00C8AA97 /* GoalTips+CoreDataClass.swift in Sources */,
 				26DA9A5526419B730087DF1F /* AdviceSearcher.swift in Sources */,
 				26AF75F425E0501E00BA2776 /* Persistence.swift in Sources */,
@@ -601,7 +605,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.4;
+				MARKETING_VERSION = 1.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = lil.pomodoro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -625,7 +629,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.4;
+				MARKETING_VERSION = 1.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = lil.pomodoro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

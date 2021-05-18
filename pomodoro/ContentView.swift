@@ -18,6 +18,8 @@ struct ContentView: View {
     @State private var openSettings = false
     @State private var tabSelection = 0
     
+    @State private var showingAlert = false
+    
     @FetchRequest
     private var tasks: FetchedResults<Task>
 
@@ -75,7 +77,16 @@ struct ContentView: View {
                             }
                         }
                     }
-                    
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            showingAlert = true
+                        }) {
+                            Label("Get The Quote Of The Day", systemImage: "quote.bubble.fill")
+                        }
+                        .fullScreenCover(isPresented: $showingAlert) {
+                            QuoteView()
+                        }
+                    }
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: addTask) {
                             Label("Add Item", systemImage: "plus")
@@ -106,11 +117,11 @@ struct ContentView: View {
             }
             .tag(1)
             Adviser()
-            .tabItem {
-                Image(systemName: "doc.text.magnifyingglass")
-                Text("Task Adviser")
-            }
-            .tag(2)
+                .tabItem {
+                    Image(systemName: "doc.text.magnifyingglass")
+                    Text("Task Adviser")
+                }
+                .tag(2)
         }.onAppear() {
             let runningTaskName = getRunningTaskName()
             if (runningTaskName != nil) {

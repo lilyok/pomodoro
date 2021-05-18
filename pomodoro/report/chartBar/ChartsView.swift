@@ -21,6 +21,7 @@ struct ChartsView: View {
     var body: some View {
         ZStack {
             VStack {
+                QuoteView(specificColor: Color.black, isModal: false)
                 Text("The most productive time to work for you")
                     .font(.system(size: 20))
                     .fontWeight(.medium)

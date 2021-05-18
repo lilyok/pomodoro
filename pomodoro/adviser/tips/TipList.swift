@@ -33,7 +33,7 @@ struct TipList: View {
                     if (isExpanded) {
                         ScrollView {
                             ForEach(plan.sorted {
-                                $0.name! < $1.name! && !$0.isCompleted
+                                $0.name! < $1.name! && $0.isCompleted == $1.isCompleted || $1.isCompleted
                             }) { item in
                                 TipDetails(task: item, isExpanded: self.selection == item.name)
                                     .overlay(

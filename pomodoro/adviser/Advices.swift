@@ -23,6 +23,9 @@ struct Adviser: View {
     @State private var summaryCount = 0
     @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
+    @State private var showingAlert = false
+    
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -53,7 +56,21 @@ struct Adviser: View {
                 }
             }.navigationBarTitleDisplayMode(.inline)
             .toolbar(content: {
-                        ToolbarItem(placement: .principal, content: {Text("Added goals")})})
+                ToolbarItem(placement: .principal, content: {Text("Added goals")})
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Label {
+                        Text("Get The Quote Of The Day").foregroundColor(Color.yellow)
+                    } icon: {
+                        Button(action: {
+                            showingAlert = true
+                        }) {
+                            Image(systemName: "quote.bubble.fill").foregroundColor(Color.yellow)
+                        }.fullScreenCover(isPresented: $showingAlert) {
+                            QuoteView(specificColor: Color.yellow, fgColor: Color.black)
+                        }
+                    }
+                }
+            })
         }.onReceive(timer) { _ in
             if (self.isLoading && self.summaryCount == self.plans.count) {
                 self.isLoading = false
@@ -107,7 +124,7 @@ struct Adviser: View {
         for el in linkToDownload {
             self.loadData(link: el.link, title: el.title, version: el.version)
         }
-
+        
         clearTopicsToDownlad()
     }
     
