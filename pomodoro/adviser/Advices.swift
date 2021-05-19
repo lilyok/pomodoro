@@ -21,7 +21,6 @@ struct Adviser: View {
     
     @State private var isLoading = false
     @State private var summaryCount = 0
-    @State var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     @State private var showingAlert = false
     
@@ -71,14 +70,6 @@ struct Adviser: View {
                     }
                 }
             })
-        }.onReceive(timer) { _ in
-            if (self.isLoading && self.summaryCount == self.plans.count) {
-                self.isLoading = false
-                self.viewContext.refreshAllObjects()
-                
-            } else if (self.summaryCount == self.plans.count) {
-                timer.upstream.connect().cancel()
-            }
         }
     }
 
@@ -94,7 +85,6 @@ struct Adviser: View {
     
     func loadAdvices() {
         self.isLoading = true
-        timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
         let linkToDownload = getTopicsToDownlad()
         let versions = getAllReadyMadePlanVersions()
@@ -102,6 +92,7 @@ struct Adviser: View {
         self.summaryCount = versions.count
 
         var indexesToDelete: [Int] = []
+        var isAnythingToUpdate: Bool = false
         for (index, el) in self.plans.enumerated() {
             let key: String = el.link!
             if (versions.keys.contains(key) == false) {
@@ -109,6 +100,7 @@ struct Adviser: View {
                 continue
             }
             if (versions[key] != el.version) {
+                isAnythingToUpdate = true
                 self.loadData(link: el.link!, title: el.title!, version: versions[key]!, update: true, elToUpdate: el)
             }
         }
@@ -118,6 +110,9 @@ struct Adviser: View {
         }
 
         if (linkToDownload.count == 0) {
+            if !isAnythingToUpdate && linkToDownload.count == 0 {
+                self.isLoading = false
+            }
             return
         }
 
@@ -143,6 +138,10 @@ struct Adviser: View {
                             updateTask(link: link, title: title, version: version, adviceDetails: adviceDetails, elToUpdate: elToUpdate!)
                         } else {
                             addTask(link: link, title: title, version: version, adviceDetails: adviceDetails)
+                        }
+                        if (self.summaryCount == self.plans.count) {
+                            self.isLoading = false
+                            self.viewContext.refreshAllObjects()
                         }
                     }
                     return
